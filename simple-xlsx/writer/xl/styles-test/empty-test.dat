@@ -13,11 +13,8 @@
   </font>
 </fonts>
 
-<fills count="4">
+<fills count="1">
   <fill><patternFill patternType="none"/></fill>
-  <fill><patternFill patternType="solid"><fgColor rgb="FF0000"/><bgColor indexed="64"/></patternFill></fill>
-  <fill><patternFill patternType="solid"><fgColor rgb="00FF00"/><bgColor indexed="64"/></patternFill></fill>
-  <fill><patternFill patternType="solid"><fgColor rgb="0000FF"/><bgColor indexed="64"/></patternFill></fill>
 </fills>
 
 <borders count="1">
@@ -28,11 +25,8 @@
   <xf numFmtId="0" fontId="0" fillId="0" borderId="0"><alignment vertical="center"/></xf>
 </cellStyleXfs>
 
-<cellXfs count="4">
+<cellXfs count="1">
   <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"><alignment vertical="center"/></xf>
-  <xf numFmtId="0" fontId="0" fillId="1" borderId="0" xfId="0" applyFill="1"><alignment vertical="center"/></xf>
-  <xf numFmtId="0" fontId="0" fillId="2" borderId="0" xfId="0" applyFill="1"><alignment vertical="center"/></xf>
-  <xf numFmtId="0" fontId="0" fillId="3" borderId="0" xfId="0" applyFill="1"><alignment vertical="center"/></xf>
 </cellXfs>
 
 <cellStyles count="1"><cellStyle name="常规" xfId="0" builtinId="0"/></cellStyles>
