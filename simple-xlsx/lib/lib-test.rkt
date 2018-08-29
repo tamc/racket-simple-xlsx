@@ -8,6 +8,26 @@
 (define test-lib
   (test-suite
    "test-lib"
+   
+   (test-case
+    "test-check-lines1"
+    (call-with-input-string 
+     "abc"
+     (lambda (expected_port)
+       (call-with-input-string
+        "abc"
+        (lambda (test_port)
+          (check-lines? expected_port test_port))))))
+
+   (test-case
+    "test-check-lines2"
+    (call-with-input-string 
+     "abc\n11"
+     (lambda (expected_port)
+       (call-with-input-string
+        "abc\n11"
+        (lambda (test_port)
+          (check-lines? expected_port test_port))))))
 
    (test-case 
     "test-AZ-NUMBER"
