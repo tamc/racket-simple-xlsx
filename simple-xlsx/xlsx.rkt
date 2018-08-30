@@ -16,7 +16,7 @@
                   (
                    (rows list?)
                    (width_hash hash?)
-                   (color_hash hash?)
+                   (style_hash hash?)
                    )]
           [struct chart-sheet
                   (
@@ -47,7 +47,7 @@
 
 (struct sheet ([name #:mutable] [seq #:mutable] [type #:mutable] [typeSeq #:mutable] [content #:mutable]))
 
-(struct data-sheet ([rows #:mutable] [width_hash #:mutable] [color_hash #:mutable]))
+(struct data-sheet ([rows #:mutable] [width_hash #:mutable] [style_hash #:mutable]))
 (struct colAttr ([width #:mutable] [back_color #:mutable]))
 
 (struct chart-sheet ([chart_type #:mutable] [topic #:mutable] [x_topic #:mutable] [x_data_range #:mutable] [y_data_range_list #:mutable]))
@@ -280,9 +280,9 @@
            (let ([converted_col_range (check-col-range col_range)])
                  (hash-set! (data-sheet-width_hash (sheet-content (get-sheet-by-name sheet_name))) converted_col_range width)))
 
-         (define/public (set-data-sheet-cell-color! #:sheet_name sheet_name #:cell_range cell_range #:color color)
+         (define/public (set-data-sheet-cell-style! #:sheet_name sheet_name #:cell_range cell_range #:style style_hash)
            (when (check-cell-range cell_range)
-                 (hash-set! (data-sheet-color_hash (sheet-content (get-sheet-by-name sheet_name))) cell_range color)))
+                 (hash-set! (data-sheet-style_hash (sheet-content (get-sheet-by-name sheet_name))) cell_range style_hash)))
 
          (define/public (get-string-item-list)
            (sort (hash-keys string_item_map) string<?))
@@ -302,9 +302,9 @@
              (let loop ([loop_list sheets])
                (when (not (null? loop_list))
                      (when (eq? (sheet-type (car loop_list)) 'data)
-                           (let ([color_hash (data-sheet-color_hash (sheet-content (car loop_list)))])
+                           (let ([style_hash (data-sheet-style_hash (sheet-content (car loop_list)))])
                              (hash-for-each
-                              color_hash
+                              style_hash
                               (lambda (range_str color_str)
                                 (hash-set! tmp_hash color_str "")))))
                      (loop (cdr loop_list))))
