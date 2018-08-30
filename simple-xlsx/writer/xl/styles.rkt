@@ -66,11 +66,8 @@
 })
 
 (define (write-cellXfs) @S{
-<cellXfs count="4">
+<cellXfs count="1">
   <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"><alignment vertical="center"/></xf>
-  <xf numFmtId="0" fontId="0" fillId="1" borderId="0" xfId="0" applyFill="1"><alignment vertical="center"/></xf>
-  <xf numFmtId="0" fontId="0" fillId="2" borderId="0" xfId="0" applyFill="1"><alignment vertical="center"/></xf>
-  <xf numFmtId="0" fontId="0" fillId="3" borderId="0" xfId="0" applyFill="1"><alignment vertical="center"/></xf>
 </cellXfs>
 })
 
