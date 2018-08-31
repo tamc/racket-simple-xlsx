@@ -188,14 +188,17 @@
 
       (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "A1-A4" #:style '( (fgColor . "red") ))
 
-      (check-equal? (send xlsx get-style-list) '("red"))
+      (let* ([style_hash (send xlsx get-style-hash)]
+             [style_list (send xlsx get-style-list)]
+             [style_index (hash-ref style_hash "A1-A4")]
+             [style (hash-ref style_list style_index)])
 
-      (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "B1-B4" #:color "blue")
-      
-      (check-equal? (send xlsx get-style-list) '("blue" "red"))
-      )
-
-      )
+        (check-equal? (hash-count style_hash) 1)
+        (check-equal? (length style_list) 1)
+        (check-true (hash? style))
+        (check_equal? (hash-count style) 1)
+        (check_equal? (hash-ref style 'fgColor) "red"))
+      ))
 
    (test-case
     "test-get-string-index-map"
