@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "xlsx.rkt")
+(require rackunit "../xlsx.rkt")
 
 (define test-xlsx
   (test-suite
@@ -179,26 +179,6 @@
     (check-equal? (range-length "AB21-AB21") 1)
     (check-equal? (range-length "A2-D2") 4)
     )
-
-   (test-case
-    "test-set-data-sheet-cell-style-and-get-style-hash"
-
-    (let ([xlsx (new xlsx%)])
-      (send xlsx add-data-sheet #:sheet_name "测试1" #:sheet_data '((1 2 "chenxiao") (3 4 "xiaomin") (5 6 "chenxiao") (1 "xx" "simmone")))
-
-      (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "A1-A4" #:style '( (fgColor . "red") ))
-
-      (let* ([style_hash (send xlsx get-style-hash)]
-             [style_list (send xlsx get-style-list)]
-             [style_index (hash-ref style_hash "A1-A4")]
-             [style (hash-ref style_list style_index)])
-
-        (check-equal? (hash-count style_hash) 1)
-        (check-equal? (length style_list) 1)
-        (check-true (hash? style))
-        (check_equal? (hash-count style) 1)
-        (check_equal? (hash-ref style 'fgColor) "red"))
-      ))
 
    (test-case
     "test-get-string-index-map"
