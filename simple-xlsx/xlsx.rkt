@@ -18,6 +18,7 @@
                    (width_hash hash?)
                    (range_to_style_code_hash hash?)
                    (style_code_to_style_hash hash?)
+                   (style_code_to_style_index_hash hash?)
                    (style_list list?)
                    (range_to_style_index_hash hash?)
                    )]
@@ -55,12 +56,18 @@
                     [width_hash #:mutable] 
                     [range_to_style_code_hash #:mutable]
                     [style_code_to_style_hash #:mutable]
+                    [style_code_to_style_index_hash #:mutable]
                     [style_list #:mutable]
                     [range_to_style_index_hash #:mutable]
                     ))
 (struct colAttr ([width #:mutable] [back_color #:mutable]))
 
-(struct chart-sheet ([chart_type #:mutable] [topic #:mutable] [x_topic #:mutable] [x_data_range #:mutable] [y_data_range_list #:mutable]))
+(struct chart-sheet (
+                     [chart_type #:mutable] 
+                     [topic #:mutable] 
+                     [x_topic #:mutable] 
+                     [x_data_range #:mutable] 
+                     [y_data_range_list #:mutable]))
 (struct data-range ([sheet_name #:mutable] [range_str #:mutable]))
 (struct data-serial ([topic #:mutable] [data_range #:mutable]))
 
@@ -219,7 +226,7 @@
                                         seq
                                         'data
                                         type_seq
-                                        (data-sheet sheet_data (make-hash) (make-hash) (make-hash) (list) (make-hash)))))
+                                        (data-sheet sheet_data (make-hash) (make-hash) (make-hash) (make-hash) (list) (make-hash)))))
                        (hash-set! sheet_name_map sheet_name (sub1 seq)))
                      (error (format "duplicate sheet name[~a]" sheet_name)))))
          
@@ -307,6 +314,7 @@
                  (let* ([sheet (sheet-content (get-sheet-by-name sheet_name))]
                         [range_to_style_code_hash (data-sheet-range_to_style_code_hash sheet)]
                         [style_code_to_style_hash (data-sheet-style_code_to_style_hash sheet)]
+                        [style_code_to_style_index_hash (data-sheet-style_code_to_style_index_hash sheet)]
                         [style_list (data-sheet-style_list sheet)]
                         [range_to_style_index_hash (data-sheet-range_to_style_index_hash sheet)]
                         [style_hash (make-hash)]
@@ -325,7 +333,10 @@
                    
                    (when (not (hash-has-key? style_code_to_style_hash style_hash_code))
                          (hash-set! style_code_to_style_hash style_hash_code style_hash)
-                         (set! style_list (cons style_hash style_list))
-                         (hash-set! range_to_style_code_hash cell_range (sub1 (length style_list)))))))
+                         (hash-set! style_code_to_style_index_hash style_hash_code (length style_list))
+                         (set-data-sheet-style_list! sheet `(,@style_list ,style_hash)))
+                   
+                   (hash-set! range_to_style_index_hash cell_range (hash-ref style_code_to_style_index_hash style_hash_code))
+                   )))
          ))
 
