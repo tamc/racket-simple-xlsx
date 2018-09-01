@@ -16,8 +16,10 @@
                   (
                    (rows list?)
                    (width_hash hash?)
-                   (range_to_code_hash hash?)
-                   (code_to_style_hash hash?)
+                   (range_to_style_code_hash hash?)
+                   (style_code_to_style_hash hash?)
+                   (style_list list?)
+                   (range_to_style_index_hash hash?)
                    )]
           [struct chart-sheet
                   (
@@ -48,7 +50,14 @@
 
 (struct sheet ([name #:mutable] [seq #:mutable] [type #:mutable] [typeSeq #:mutable] [content #:mutable]))
 
-(struct data-sheet ([rows #:mutable] [width_hash #:mutable] [style_pair_list #:mutable]))
+(struct data-sheet (
+                    [rows #:mutable] 
+                    [width_hash #:mutable] 
+                    [range_to_style_code_hash #:mutable]
+                    [style_code_to_style_hash #:mutable]
+                    [style_list #:mutable]
+                    [range_to_style_index_hash #:mutable]
+                    ))
 (struct colAttr ([width #:mutable] [back_color #:mutable]))
 
 (struct chart-sheet ([chart_type #:mutable] [topic #:mutable] [x_topic #:mutable] [x_data_range #:mutable] [y_data_range_list #:mutable]))
@@ -210,7 +219,7 @@
                                         seq
                                         'data
                                         type_seq
-                                        (data-sheet sheet_data (make-hash) (make-hash)))))
+                                        (data-sheet sheet_data (make-hash) (make-hash) (make-hash) (list) (make-hash)))))
                        (hash-set! sheet_name_map sheet_name (sub1 seq)))
                      (error (format "duplicate sheet name[~a]" sheet_name)))))
          
@@ -296,8 +305,10 @@
          (define/public (set-data-sheet-cell-style! #:sheet_name sheet_name #:cell_range cell_range #:style style_pair_list)
            (when (check-cell-range cell_range)
                  (let* ([sheet (sheet-content (get-sheet-by-name sheet_name))]
-                        [range_to_code_hash (data-sheet-range_to_code_hash sheet)]
-                        [code_to_style_hash (data-sheet-code_to_style_hash sheet)]
+                        [range_to_style_code_hash (data-sheet-range_to_style_code_hash sheet)]
+                        [style_code_to_style_hash (data-sheet-style_code_to_style_hash sheet)]
+                        [style_list (data-sheet-style_list sheet)]
+                        [range_to_style_index_hash (data-sheet-range_to_style_index_hash sheet)]
                         [style_hash (make-hash)]
                         [style_hash_code #f])
                    
@@ -310,23 +321,11 @@
                     style_pair_list)
                    
                    (set! style_hash_code (equal-hash-code style_hash))
-                   (hash-set! range_to_code_hash cell_range style_hash_code)
-                   (hash-set! code_to_style_hash style_hash_code style_hash))))
-
-         (define/public (get-color-list)
-           (let ([style_list '()]
-                 [tmp_hash (make-hash)])
-             (let loop ([loop_list sheets])
-               (when (not (null? loop_list))
-                     (when (eq? (sheet-type (car loop_list)) 'data)
-                           (let ([style_pair_list (data-sheet-style_pair_list (sheet-content (car loop_list)))])
-                             (hash-for-each
-                              style_pair_list
-                              (lambda (range_str color_str)
-                                (hash-set! tmp_hash color_str "")))))
-                     (loop (cdr loop_list))))
-             
-             (sort (hash-keys tmp_hash) string<?)))
-
+                   (hash-set! range_to_style_code_hash cell_range style_hash_code)
+                   
+                   (when (not (hash-has-key? style_code_to_style_hash style_hash_code))
+                         (hash-set! style_code_to_style_hash style_hash_code style_hash)
+                         (set! style_list (cons style_hash style_list))
+                         (hash-set! range_to_style_code_hash cell_range (sub1 (length style_list)))))))
          ))
 
