@@ -44,11 +44,9 @@
 </fonts>
 })
 
-(define (write-fills) @S{
-<fills count="4">
+(define (write-fills color_list) @S{
+<fills count="@|(add1 (length |">
   <fill><patternFill patternType="none"/></fill>
-  <fill><patternFill patternType="solid"><fgColor rgb="FF0000"/><bgColor indexed="64"/></patternFill></fill>
-  <fill><patternFill patternType="solid"><fgColor rgb="00FF00"/><bgColor indexed="64"/></patternFill></fill>
   <fill><patternFill patternType="solid"><fgColor rgb="0000FF"/><bgColor indexed="64"/></patternFill></fill>
 </fills>
 })
@@ -83,18 +81,18 @@
 </styleSheet>
 })
 
-(define (write-styles color_list) @S{
+(define (write-styles style_list) @S{
 @|(write-header)|
 
 @|(write-fonts)|
 
-@|(write-fills)|
+@|(write-fills style_list)|
 
 @|(write-borders)|
 
 @|(write-cellStyleXfs)|
 
-@|(write-cellXfs)|
+@|(write-cellXfs style_list)|
 
 @|(write-cellStyles)|
 

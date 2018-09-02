@@ -316,9 +316,14 @@
                         [style_code_to_style_hash (data-sheet-style_code_to_style_hash sheet)]
                         [style_code_to_style_index_hash (data-sheet-style_code_to_style_index_hash sheet)]
                         [style_list (data-sheet-style_list sheet)]
+                        [range_to_style_hash (data-sheet-range_to_style_hash sheet)]
                         [range_to_style_index_hash (data-sheet-range_to_style_index_hash sheet)]
                         [style_hash (make-hash)]
-                        [style_hash_code #f])
+                        [style_hash_code #f]
+                        [fill_hash (make-hash)]
+                        [fill_hash_to_code_hash (data-sheet-fill_hash_to_code_hash sheet)]
+                        [fill_list (data-sheet-fill_list sheet)]
+                        )
                    
                    (for-each
                     (lambda (style_pair)
@@ -342,5 +347,7 @@
          (define/public (get-range-to-style-index-map sheet_name)
            (data-sheet-range_to_style_index_hash (sheet-content (get-sheet-by-name sheet_name))))
 
-         ))
+         (define/public (get-style-list sheet_name)
+           (data-sheet-style_list (sheet-content (get-sheet-by-name sheet_name))))
 
+         ))
