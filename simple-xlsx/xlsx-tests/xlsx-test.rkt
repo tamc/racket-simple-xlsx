@@ -55,9 +55,6 @@
 
         (send xlsx set-data-sheet-col-width! #:sheet_name "测试2" #:col_range "A-C" #:width 100)
         (check-equal? (hash-ref (data-sheet-width_hash (sheet-content sheet)) "A-C") 100)
-
-        (send xlsx set-data-sheet-cell-color! #:sheet_name "测试2" #:cell_range "A1-C2" #:color "red")
-        (check-equal? (hash-ref (data-sheet-color_hash (sheet-content sheet)) "A1-C2") "red")
         )
 
       (send xlsx add-chart-sheet #:sheet_name "测试3" #:topic "图表1")

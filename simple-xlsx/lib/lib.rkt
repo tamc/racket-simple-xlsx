@@ -26,6 +26,7 @@
           [get-dimension (-> list? string?)]
           [zip-xlsx (-> path-string? path-string? void?)]
           [range-hash-ref (-> hash? string? any/c)]
+          [flat-range-hash (-> hash? hash?)]
           [check-lines? (-> input-port? input-port? void?)]
           ))
 
@@ -252,5 +253,29 @@
                 (loop (cdr loop_list))))
           #f))))
 
-         
-       
+(define (flat-range-hash range_hash)
+  (let ([flat_map (make-hash)])
+    (let key-loop ([key_list (hash-keys range_hash)])
+      (when (not (null? key_list))
+          (when (regexp-match #rx"^([A-Z]+)([0-9]+)-([A-Z]+)([0-9]+)$" (car key_list))
+                (let* ([range_items (regexp-match #rx"^([A-Z]+)([0-9]+)-([A-Z]+)([0-9]+)$" (car key_list))]
+                       [start_col_index (abc->number (list-ref range_items 1))]
+                       [start_row_index (string->number (list-ref range_items 2))]
+                       [end_col_index (abc->number (list-ref range_items 3))]
+                       [end_row_index (string->number (list-ref range_items 4))])
+                  (let range-loop ([loop_col_index start_col_index]
+                                   [loop_row_index start_row_index])
+                    (when (and
+                           (<= loop_col_index end_col_index)
+                           (<= loop_row_index end_row_index))
+                          (hash-set! flat_map 
+                                     (string-append (number->abc loop_col_index) (number->string loop_row_index))
+                                     (hash-ref range_hash (car key_list)))
+                          (cond
+                           [(< loop_col_index end_col_index)
+                            (range-loop (add1 loop_col_index) loop_row_index)]
+                           [(< loop_row_index end_row_index)
+                            (range-loop start_col_index (add1 loop_row_index))])))))
+
+                (key-loop (cdr key_list))))
+    flat_map))

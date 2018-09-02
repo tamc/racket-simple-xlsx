@@ -74,6 +74,10 @@
         (check-equal? style_index 0)
         (check-equal? (hash-count style) 1)
         (check-equal? (hash-ref style (quote fgColor)) "red")))
+      
+      (let ([style_map (send xlsx get-range-to-style-index-map "测试1")])
+        (check-equal? (hash-ref style_map "C1-C4") 0))
+
       ))))
 
 (run-tests test-xlsx)
