@@ -345,10 +345,8 @@
                    (hash-set! range_to_style_index_hash cell_range (hash-ref style_code_to_style_index_hash style_hash_code))
                    )))
 
-         (define/public (get-range-to-style-index-map sheet_name)
-           (data-sheet-range_to_style_index_hash (sheet-content (get-sheet-by-name sheet_name))))
-
-         (define/public (get-style-list sheet_name)
-           (data-sheet-style_list (sheet-content (get-sheet-by-name sheet_name))))
+         (define/public (get-cell-to-style-index-map sheet_name)
+           (flat-range-map
+            (data-sheet-range_to_style_index_hash (sheet-content (get-sheet-by-name sheet_name)))))
 
          ))
