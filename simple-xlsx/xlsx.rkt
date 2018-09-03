@@ -321,7 +321,8 @@
                         [style_hash (make-hash)]
                         [style_hash_code #f]
                         [fill_hash (make-hash)]
-                        [fill_hash_to_code_hash (data-sheet-fill_hash_to_code_hash sheet)]
+                        [fill_code_to_fill_hash (data-sheet-fill_code_to_fill_hash sheet)]
+                        [fill_code_to_fill_index_hash (data-sheet-fill_code_
                         [fill_list (data-sheet-fill_list sheet)]
                         )
                    
