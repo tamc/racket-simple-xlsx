@@ -19,98 +19,98 @@
 
         (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "A1-A4" #:style '( (fgColor . "red") ))
 
-        (let ([range_to_code_hash (data-sheet-range_to_style_code_hash sheet)]
-              [code_to_style_hash (data-sheet-style_code_to_style_hash sheet)]
+        (let ([code_to_style_hash (data-sheet-style_code_to_style_index_hash sheet)]
               [style_list (data-sheet-style_list sheet)]
               [range_to_index_hash (data-sheet-range_to_style_index_hash sheet)]
-              [code_to_fill_hash (data-sheet-code_to_fill_hash sheet)]
+              [fill_code_to_fill_index_hash (data-sheet-fill_code_to_fill_index_hash sheet)]
               [fill_list (data-sheet-fill_list sheet)]
               )
 
-          (check-equal? (hash-count range_to_code_hash) 1)
-          (check-equal? (hash-count code_to_style_hash) 1)
-          (check-equal? (length style_list) 1)
-          (check-equal? (hash-count code_to_fill_hash) 1)
-          (check-equal? (length fill_list) 1)
-          (check-equal? (hash-count range_to_index_hash) 1)
+          (check-equal? 1 (hash-count code_to_style_hash))
+          (check-equal? 1 (length style_list))
+          (check-equal? 1 (hash-count fill_code_to_fill_index_hash))
+          (check-equal? 1 (length fill_list))
+          (check-equal? 1 (hash-count range_to_index_hash))
 
           (let* ([style_index (hash-ref range_to_index_hash "A1-A4")]
                  [style (list-ref style_list style_index)]
-                 [fill_code (list-ref fill_list 0)]
-                 [fill (hash-ref code_to_fill_hash fill_code)])
+                 [fill_index (hash-ref style 'fill)]
+                 [fill (list-ref fill_list fill_index)])
 
-            (check-equal? style_index 0)
-            (check-equal? '( (fill . 0) ) style)
+            (check-equal? 0 style_index)
+            (check-equal? 0 fill_index)
+            (check-equal? 1 (hash-count style))
+            (check-equal? 0 (hash-ref style 'fill))
 
-            (check-equal? (hash-count fill) 1)
-            (check-equal? (hash-ref fill 'fgColor) "red")
+            (check-equal? 1 (hash-count fill))
+            (check-equal? "red" (hash-ref fill 'fgColor))
             ))
 
         (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "B1-B4" #:style '( (fgColor . "blue") ))
 
-        (let ([range_to_code_hash (data-sheet-range_to_style_code_hash sheet)]
-              [code_to_style_hash (data-sheet-style_code_to_style_hash sheet)]
+        (let ([code_to_style_hash (data-sheet-style_code_to_style_index_hash sheet)]
               [style_list (data-sheet-style_list sheet)]
               [range_to_index_hash (data-sheet-range_to_style_index_hash sheet)]
-              [code_to_fill_hash (data-sheet-code_to_fill_hash sheet)]
+              [fill_code_to_fill_index_hash (data-sheet-fill_code_to_fill_index_hash sheet)]
               [fill_list (data-sheet-fill_list sheet)]
               )
 
-          (check-equal? (hash-count range_to_code_hash) 2)
-          (check-equal? (hash-count code_to_style_hash) 2)
-          (check-equal? (length style_list) 2)
-          (check-equal? (hash-count code_to_fill_hash) 2)
-          (check-equal? (length fill_list) 2)
-          (check-equal? (hash-count range_to_index_hash) 2)
+          (check-equal? 2 (hash-count code_to_style_hash))
+          (check-equal? 2 (length style_list))
+          (check-equal? 2 (hash-count fill_code_to_fill_index_hash))
+          (check-equal? 2 (length fill_list))
+          (check-equal? 2 (hash-count range_to_index_hash))
 
           (let* ([style_index (hash-ref range_to_index_hash "B1-B4")]
                  [style (list-ref style_list style_index)]
-                 [fill_code (list-ref fill_list 1)]
-                 [fill (hash-ref code_to_fill_hash fill_code)])
+                 [fill_index (hash-ref style 'fill)]
+                 [fill (list-ref fill_list fill_index)])
 
-            (check-equal? style_index 1)
-            (check-equal? '( (fill . 1) ) style)
+            (check-equal? 1 style_index)
+            (check-equal? 1 fill_index)
+            (check-equal? 1 (hash-count style))
+            (check-equal? 1 (hash-ref style 'fill))
 
-            (check-equal? (hash-count fill) 2)
-            (check-equal? (hash-ref fill 'fgColor) "blue")
+            (check-equal? 1 (hash-count fill))
+            (check-equal? "blue" (hash-ref fill 'fgColor))
             ))
 
         (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "C1-C4" #:style '( (fgColor . "red") ))
 
-        (let ([range_to_code_hash (data-sheet-range_to_style_code_hash sheet)]
-              [code_to_style_hash (data-sheet-style_code_to_style_hash sheet)]
+        (let ([code_to_style_hash (data-sheet-style_code_to_style_index_hash sheet)]
               [style_list (data-sheet-style_list sheet)]
               [range_to_index_hash (data-sheet-range_to_style_index_hash sheet)]
-              [code_to_fill_hash (data-sheet-code_to_fill_hash sheet)]
+              [fill_code_to_fill_index_hash (data-sheet-fill_code_to_fill_index_hash sheet)]
               [fill_list (data-sheet-fill_list sheet)]
               )
 
-          (check-equal? (hash-count range_to_code_hash) 3)
-          (check-equal? (hash-count code_to_style_hash) 2)
-          (check-equal? (length style_list) 2)
-          (check-equal? (hash-count code_to_fill_hash) 2)
-          (check-equal? (length fill_list) 2)
-          (check-equal? (hash-count range_to_index_hash) 3)
+          (check-equal? 2 (hash-count code_to_style_hash))
+          (check-equal? 2 (length style_list))
+          (check-equal? 2 (hash-count fill_code_to_fill_index_hash))
+          (check-equal? 2 (length fill_list))
+          (check-equal? 3 (hash-count range_to_index_hash))
 
           (let* ([style_index (hash-ref range_to_index_hash "C1-C4")]
                  [style (list-ref style_list style_index)]
-                 [fill_code (list-ref fill_list 0)]
-                 [fill (hash-ref code_to_fill_hash fill_code)])
+                 [fill_index (hash-ref style 'fill)]
+                 [fill (list-ref fill_list fill_index)])
 
-            (check-equal? style_index 0)
-            (check-equal? '( (fill . 0) ) style)
+            (check-equal? 0 style_index)
+            (check-equal? 0 fill_index)
+            (check-equal? 1 (hash-count style))
+            (check-equal? 0 (hash-ref style 'fill))
 
-            (check-equal? (hash-count fill) 2)
-            (check-equal? (hash-ref fill 'fgColor) "red")
+            (check-equal? 1 (hash-count fill))
+            (check-equal? "red" (hash-ref fill 'fgColor))
             ))
 
-      (let ([style_map (send xlsx get-cell-to-style-index-map "测试1")])
-        (check-equal? (hash-count style_map) 12)
-        (check-equal? (hash-ref style_map "A1") 0)
-        (check-equal? (hash-ref style_map "B2") 1)
-        (check-equal? (hash-ref style_map "C2") 0)
-        )
+        (let ([style_map (send xlsx get-cell-to-style-index-map "测试1")])
+          (check-equal? (hash-count style_map) 12)
+          (check-equal? (hash-ref style_map "A1") 0)
+          (check-equal? (hash-ref style_map "B2") 1)
+          (check-equal? (hash-ref style_map "C2") 0)
+          )
 
-      ))))
+        )))))
 
 (run-tests test-xlsx)
