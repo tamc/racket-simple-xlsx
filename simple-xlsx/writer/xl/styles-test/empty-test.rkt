@@ -16,19 +16,9 @@
     (call-with-input-file "empty-test.dat"
       (lambda (expected)
         (call-with-input-string
-         (write-styles '("FF0000" "00FF00" "0000FF"))
+         (write-styles '() '())
          (lambda (actual)
            (check-lines? expected actual))))))
-
-   (test-case
-    "test-color-style"
-    
-    (call-with-input-file "color-test.dat"
-      (lambda (expected)
-        (call-with-input-string
-         (write-styles '("FF0000" "00FF00" "0000FF"))
-         (lambda (actual)
-           (check-lines? expected actual)))))
-   )))
+   ))
 
 (run-tests test-styles)

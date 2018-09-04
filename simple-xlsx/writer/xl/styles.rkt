@@ -10,14 +10,14 @@
 (require "../../xlsx.rkt")
 
 (provide (contract-out
-          [write-styles (-> list? string?)]
+          [write-styles (-> list? list? string?)]
           [write-styles-file (-> path-string? (is-a?/c xlsx%) void?)]
           [write-header (-> string?)]
           [write-fonts (-> string?)]
-          [write-fills (-> string?)]
+          [write-fills (-> list? string?)]
           [write-borders (-> string?)]
           [write-cellStyleXfs (-> string?)]
-          [write-cellXfs (-> string?)]
+          [write-cellXfs (-> list? string?)]
           [write-cellStyles (-> string?)]
           [write-dxfs (-> string?)]
           [write-footer (-> string?)]
@@ -44,11 +44,17 @@
 </fonts>
 })
 
-(define (write-fills color_list) @S{
-<fills count="@|(add1 (length |">
+(define (write-fills fill_list) @S{
+<fills count="@|(number->string (add1 (length fill_list)))|">
   <fill><patternFill patternType="none"/></fill>
-  <fill><patternFill patternType="solid"><fgColor rgb="0000FF"/><bgColor indexed="64"/></patternFill></fill>
-</fills>
+@|(let loop ([loop_list fill_list]
+             [result_str ""])
+    (if (not (null? loop_list))
+      (let ([fgColor (hash-ref (car loop_list) 'fgColor "FFFFFF")])
+        (loop 
+          (cdr loop_list)
+          (string-append result_str (format "  <fill><patternFill patternType=\"solid\"><fgColor rgb=\"~a\"/><bgColor indexed=\"64\"/></patternFill></fill>\n" fgColor))))
+        result_str))|</fills>
 })
 
 (define (write-borders) @S{
@@ -63,7 +69,7 @@
 </cellStyleXfs>
 })
 
-(define (write-cellXfs) @S{
+(define (write-cellXfs style_list) @S{
 <cellXfs count="1">
   <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"><alignment vertical="center"/></xf>
 </cellXfs>
@@ -81,12 +87,12 @@
 </styleSheet>
 })
 
-(define (write-styles style_list) @S{
+(define (write-styles style_list fill_list) @S{
 @|(write-header)|
 
 @|(write-fonts)|
 
-@|(write-fills style_list)|
+@|(write-fills fill_list)|
 
 @|(write-borders)|
 
