@@ -70,9 +70,16 @@
 })
 
 (define (write-cellXfs style_list) @S{
-<cellXfs count="1">
+<cellXfs count="@|(number->string (add1 (length style_list)))|">
   <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"><alignment vertical="center"/></xf>
-</cellXfs>
+@|(let loop ([loop_list style_list]
+             [result_str ""])
+    (if (not (null? loop_list))
+      (let ([fill (hash-ref (car loop_list) 'fill 0)])
+        (loop
+          (cdr loop_list)
+          (string-append result_str (format "  <xf numFmtId=\"0\" fontId=\"0\" fillId=\"~a\" borderId=\"0\" xfId=\"0\"><alignment vertical=\"center\"/></xf>\n" fill))))
+        result_str))|</cellXfs>
 })
 
 (define (write-cellStyles) @S{
@@ -105,22 +112,6 @@
 @|(write-dxfs)|
 
 @|(write-footer)|
-})
-
-(define (write-styles-bak color_list) @S{
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><color theme="1"/><name val="宋体"/><family val="2"/><charset val="134"/><scheme val="minor"/></font><font><sz val="9"/><name val="宋体"/><family val="2"/><charset val="134"/><scheme val="minor"/></font></fonts><fills count="@|(number->string (+ 2 (length color_list)))|"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill>@|(with-output-to-string
-  (lambda ()
-    (for-each
-     (lambda (style_rec)
-       (printf "<fill><patternFill patternType=\"solid\"><fgColor rgb=\"~a\"/><bgColor indexed=\"64\"/></patternFill></fill>" style_rec))
-     color_list)))|</fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"><alignment vertical="center"/></xf></cellStyleXfs><cellXfs count="@|(number->string (add1 (length color_list)))|"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"><alignment vertical="center"/></xf>@|(with-output-to-string
-(lambda ()
-  (let loop ([loop_list color_list]
-             [index 2])
-    (when (not (null? loop_list))
-          (printf "<xf numFmtId=\"0\" fontId=\"0\" fillId=\"~a\" borderId=\"0\" xfId=\"0\" applyFill=\"1\"><alignment vertical=\"center\"/></xf>" index)
-          (loop (cdr loop_list) (add1 index))))))|</cellXfs><cellStyles count="1"><cellStyle name="常规" xfId="0" builtinId="0"/></cellStyles><dxfs count="0"/><tableStyles count="0" defaultTableStyle="TableStyleMedium9" defaultPivotStyle="PivotStyleLight16"/></styleSheet>
 })
 
 (define (write-styles-file dir xlsx)
