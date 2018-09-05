@@ -11,14 +11,15 @@
    "test-styles"
 
    (test-case
-    "test-cellXfs"
+    "test-styles"
     
-    (let ([style_list (list #hash((fill . 1)) #hash((fill . 2)) #hash((fill . 3)))])
+    (let ([style_list (list #hash((fill . 1)) #hash((fill . 2)) #hash((fill . 3)))]
+          [fill_list (list #hash((fgColor . "FF0000")) #hash((fgColor . "00FF00")) #hash((fgColor . "0000FF")))])
       
-      (call-with-input-file "cellXfs-test.dat"
+      (call-with-input-file "styles-test.dat"
         (lambda (expected)
           (call-with-input-string
-           (write-cellXfs style_list)
+           (write-styles style_list fill_list)
            (lambda (actual)
              (check-lines? expected actual)))))
       ))))

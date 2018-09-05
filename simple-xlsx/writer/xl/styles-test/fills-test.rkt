@@ -13,19 +13,7 @@
    (test-case
     "test-color-style"
     
-    (let ([fill_list '()])
-
-      (let ([fill_hash (make-hash)])
-        (hash-set! fill_hash 'fgColor "FF0000")
-        (set! fill_list `(,@fill_list ,fill_hash)))
-
-      (let ([fill_hash (make-hash)])
-        (hash-set! fill_hash 'fgColor "00FF00")
-        (set! fill_list `(,@fill_list ,fill_hash)))
-
-      (let ([fill_hash (make-hash)])
-        (hash-set! fill_hash 'fgColor "0000FF")
-        (set! fill_list `(,@fill_list ,fill_hash)))
+    (let ([fill_list (list #hash((fgColor . "FF0000")) #hash((fgColor . "00FF00")) #hash((fgColor . "0000FF")))])
       
       (call-with-input-file "fills-test.dat"
         (lambda (expected)
