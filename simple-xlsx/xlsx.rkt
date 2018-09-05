@@ -16,9 +16,9 @@
                   (
                    (rows list?)
                    (width_hash hash?)
+                   (range_to_style_index_hash hash?)
                    (style_code_to_style_index_hash hash?)
                    (style_list list?)
-                   (range_to_style_index_hash hash?)
                    (fill_code_to_fill_index_hash hash?)
                    (fill_list list?)
                    )]

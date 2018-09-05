@@ -120,4 +120,7 @@
   (with-output-to-file (build-path dir "styles.xml")
     #:exists 'replace
     (lambda ()
-      (printf "~a" (write-styles (send xlsx get-color-list))))))
+      (printf "~a" (write-styles 
+                    (send xlsx get-style-list)
+                    (send xlsx get-fill-list)
+                    )))))
