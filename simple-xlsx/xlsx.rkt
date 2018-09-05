@@ -17,6 +17,9 @@
                    (rows list?)
                    (width_hash hash?)
                    (range_to_style_index_hash hash?)
+                   )]
+          [struct xlsx-style
+                  (
                    (style_code_to_style_index_hash hash?)
                    (style_list list?)
                    (fill_code_to_fill_index_hash hash?)
@@ -53,13 +56,16 @@
 
 (struct data-sheet (
                     [rows #:mutable] 
-                    [width_hash #:mutable] 
+                    [width_hash #:mutable]
+                    [range_to_style_index_hash #:mutable]))
+
+(struct xlsx-style (
                     [style_code_to_style_index_hash #:mutable]
                     [style_list #:mutable]
-                    [range_to_style_index_hash #:mutable]
                     [fill_code_to_fill_index_hash #:mutable]
                     [fill_list #:mutable]
                     ))
+
 (struct colAttr ([width #:mutable] [back_color #:mutable]))
 
 (struct chart-sheet (
@@ -202,6 +208,7 @@
           [sheets '()]
           [sheet_name_map (make-hash)]
           [string_item_map (make-hash)]
+          [style (xlsx-style (make-hash) '() (make-hash) '())]
           )
          
          (define/public (add-data-sheet #:sheet_name sheet_name #:sheet_data sheet_data)
@@ -226,7 +233,7 @@
                                         seq
                                         'data
                                         type_seq
-                                        (data-sheet sheet_data (make-hash) (make-hash) '() (make-hash) (make-hash) '()))))
+                                        (data-sheet sheet_data (make-hash) (make-hash)))))
                        (hash-set! sheet_name_map sheet_name (sub1 seq)))
                      (error (format "duplicate sheet name[~a]" sheet_name)))))
          
@@ -312,15 +319,15 @@
          (define/public (set-data-sheet-cell-style! #:sheet_name sheet_name #:cell_range cell_range #:style style_pair_list)
            (when (check-cell-range cell_range)
                  (let* ([sheet (sheet-content (get-sheet-by-name sheet_name))]
-                        [style_code_to_style_index_hash (data-sheet-style_code_to_style_index_hash sheet)]
-                        [style_list (data-sheet-style_list sheet)]
+                        [range_to_style_index_hash (data-sheet-range_to_style_index_hash sheet)]
+                        [style_code_to_style_index_hash (xlsx-style-style_code_to_style_index_hash style)]
+                        [style_list (xlsx-style-style_list style)]
                         [style_hash (make-hash)]
                         [style_hash_code #f]
-                        [range_to_style_index_hash (data-sheet-range_to_style_index_hash sheet)]
                         [fill_hash (make-hash)]
                         [fill_hash_code #f]
-                        [fill_code_to_fill_index_hash (data-sheet-fill_code_to_fill_index_hash sheet)]
-                        [fill_list (data-sheet-fill_list sheet)]
+                        [fill_code_to_fill_index_hash (xlsx-style-fill_code_to_fill_index_hash style)]
+                        [fill_list (xlsx-style-fill_list style)]
                         )
                    
                    (for-each
@@ -341,7 +348,7 @@
                    (if (not (hash-has-key? fill_code_to_fill_index_hash fill_hash_code))
                        (begin
                          (hash-set! fill_code_to_fill_index_hash fill_hash_code (length fill_list))
-                         (set-data-sheet-fill_list! sheet `(,@fill_list ,fill_hash))
+                         (set-xlsx-style-fill_list! style `(,@fill_list ,fill_hash))
                          (hash-set! style_hash 'fill (length fill_list)))
                        (hash-set! style_hash 'fill (hash-ref fill_code_to_fill_index_hash fill_hash_code)))
                    
@@ -350,7 +357,7 @@
                    (if (not (hash-has-key? style_code_to_style_index_hash style_hash_code))
                        (begin
                          (hash-set! style_code_to_style_index_hash style_hash_code (length style_list))
-                         (set-data-sheet-style_list! sheet `(,@style_list ,style_hash))
+                         (set-xlsx-style-style_list! style `(,@style_list ,style_hash))
                          (hash-set! range_to_style_index_hash cell_range (length style_list)))
                        (hash-set! range_to_style_index_hash cell_range (hash-ref style_code_to_style_index_hash style_hash_code)))
                    )))
