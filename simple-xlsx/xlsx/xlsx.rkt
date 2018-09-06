@@ -205,4 +205,8 @@
            (flat-range-hash
             (data-sheet-range_to_style_index_hash (sheet-content (get-sheet-by-name sheet_name)))))
 
+         (define/public (get-style-list) (xlsx-style-style_list style))
+
+         (define/public (get-fill-list) (xlsx-style-fill_list style))
+
          ))

@@ -24,13 +24,9 @@
                                  ))
             (send xlsx set-data-sheet-col-width! #:sheet_name "DataSheet" #:col_range "A-B" #:width 50)
 
-            (let ([style_hash (make-hash)])
-              (set! style_hash 'fgColor "FF0000")
-              (send xlsx set-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B2-C3" #:style style_hash))
+            (send xlsx set-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B2-C3" #:style '( (fgColor . "FF00000") ))
 
-            (let ([style_hash (make-hash)])
-              (set! style_hash 'fgColor "0000FF")
-              (send xlsx set-data-sheet-cell-color! #:sheet_name "DataSheet" #:cell_range "C4-D4" #:style style_hash))
+            (send xlsx set-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "C4-D4" #:style '( (fgColor . "0000FF") ))
 
             (send xlsx add-chart-sheet #:sheet_name "LineChart1" #:topic "Horizontal Data" #:x_topic "Kg")
             (send xlsx set-chart-x-data! #:sheet_name "LineChart1" #:data_sheet_name "DataSheet" #:data_range "B1-D1")
@@ -88,7 +84,8 @@
              ))
           )
         (lambda () 
-          (delete-file "test.xlsx"))
+          (void))
+;          (delete-file "test.xlsx"))
         ))
    ))
 

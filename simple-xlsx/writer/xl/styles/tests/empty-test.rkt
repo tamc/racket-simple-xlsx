@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require "../../../lib/lib.rkt")
+(require "../../../../lib/lib.rkt")
 
 (require rackunit "../styles.rkt")
 

@@ -6,12 +6,8 @@
 (require racket/list)
 (require racket/contract)
 
-(require "../../lib/lib.rkt")
-(require "../../xlsx.rkt")
-
 (provide (contract-out
           [write-styles (-> list? list? string?)]
-          [write-styles-file (-> path-string? (is-a?/c xlsx%) void?)]
           [write-header (-> string?)]
           [write-fonts (-> string?)]
           [write-fills (-> list? string?)]
@@ -21,6 +17,7 @@
           [write-cellStyles (-> string?)]
           [write-dxfs (-> string?)]
           [write-footer (-> string?)]
+          [write-styles-file (-> path-string? list? list? void?)]
           ))
 
 (define S string-append)
@@ -114,13 +111,13 @@
 @|(write-footer)|
 })
 
-(define (write-styles-file dir xlsx)
+(define (write-styles-file dir style_list fill_list)
   (make-directory* dir)
 
   (with-output-to-file (build-path dir "styles.xml")
     #:exists 'replace
     (lambda ()
       (printf "~a" (write-styles 
-                    (send xlsx get-style-list)
-                    (send xlsx get-fill-list)
+                    style_list
+                    fill_list
                     )))))

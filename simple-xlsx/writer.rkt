@@ -6,7 +6,7 @@
 
 (require racket/date)
 
-(require "xlsx.rkt")
+(require "xlsx/xlsx.rkt")
 (require "lib/lib.rkt")
 (require "writer/content-type.rkt")
 (require "writer/_rels/rels.rkt")
@@ -15,7 +15,7 @@
 (require "writer/xl/_rels/workbook-xml-rels.rkt")
 (require "writer/xl/printerSettings/printerSettings.rkt")
 (require "writer/xl/sharedStrings.rkt")
-(require "writer/xl/styles.rkt")
+(require "writer/xl/styles/styles.rkt")
 (require "writer/xl/theme/theme.rkt")
 (require "writer/xl/workbook.rkt")
 (require "writer/xl/worksheets/_rels/rels.rkt")
@@ -57,7 +57,7 @@
           (write-shared-strings-file (build-path tmp_dir "xl") xlsx)
 
           ;; styles
-          (write-styles-file (build-path tmp_dir "xl") xlsx)
+          (write-styles-file (build-path tmp_dir "xl") (send xlsx get-style-list) (send xlsx get-fill-list))
 
           ;; workbook
           (write-workbook-file (build-path tmp_dir "xl") xlsx)

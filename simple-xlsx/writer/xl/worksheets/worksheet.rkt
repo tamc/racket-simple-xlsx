@@ -1,7 +1,8 @@
 #lang racket
 
 (require "../../../lib/lib.rkt")
-(require "../../../xlsx.rkt")
+(require "../../../xlsx/xlsx.rkt")
+(require "../../../xlsx/sheet.rkt")
 
 (provide (contract-out
           [write-data-sheet (-> string? (is-a?/c xlsx%) string?)]
@@ -10,14 +11,8 @@
           ))
 
 (define (write-data-sheet sheet_name xlsx)
-  (let ([color_style_map (make-hash)]
-        [string_index_map (send xlsx get-string-index-map)])
-
-    (let loop ([loop_list (send xlsx get-color-list)]
-               [index 1])
-      (when (not (null? loop_list))
-            (hash-set! color_style_map (car loop_list) index)
-            (loop (cdr loop_list) (add1 index))))
+  (let ([string_index_map (send xlsx get-string-index-map)]
+        [cell_to_style_index_hash (send xlsx get-cell-to-style-index-map sheet_name)])
 
     (with-output-to-string
       (lambda ()
@@ -29,7 +24,6 @@
                [col_count (length (car rows))]
                [span_str (string-append "1:" (number->string col_count))]
                [width_hash (data-sheet-width_hash data_sheet)]
-               [color_hash (data-sheet-color_hash data_sheet)]
                [dimension (if (= (length rows) 0) "A1" (string-append "A1:" (get-dimension rows)))]
                [is_active (if (= (sheet-seq sheet) 1) "tabSelected=\"1\"" "")]
                [active_cell (if (null? data_sheet) "" "<selection activeCell=\"A1\" sqref=\"A1\"/>")])
@@ -70,19 +64,19 @@
                             (when (not (null? loop_cols))
                                   (let* ([cell (car loop_cols)]
                                          [dimension (string-append (number->abc col_seq) (number->string row_seq))]
-                                         [color (range-hash-ref color_hash dimension)]
-                                         [color_style
-                                          (if color (string-append " s=\"" (number->string (hash-ref color_style_map color)) "\"") "")])
+                                         [style_index (hash-ref cell_to_style_index_hash dimension #f)]
+                                         [style
+                                          (if style_index (string-append " s=\"" (number->string style_index) "\"") "")])
                                     (cond
                                      [(string? cell)
                                       (printf "<c r=\"~a\"~a t=\"s\"><v>~a</v></c>" 
-                                              dimension color_style (hash-ref string_index_map cell))]
+                                              dimension style (hash-ref string_index_map cell))]
                                      [(exact-integer? cell)
                                       (printf "<c r=\"~a\"~a><v>~a</v></c>" 
-                                              dimension color_style (number->string (inexact->exact cell)))]
+                                              dimension style (number->string (inexact->exact cell)))]
                                      [(number? cell)
                                       (printf "<c r=\"~a\"~a><v>~a</v></c>" 
-                                              dimension color_style (number->string (exact->inexact cell)))]
+                                              dimension style (number->string (exact->inexact cell)))]
                                      [else
                                       (printf "<c r=\"~a\"><v>0</v></c>" dimension)]))
                                   (loop-col (cdr loop_cols) (add1 col_seq))))))
