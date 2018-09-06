@@ -3,6 +3,7 @@
 (require rackunit/text-ui)
 
 (require rackunit "../xlsx.rkt")
+(require rackunit "../sheet.rkt")
 
 (define test-xlsx
   (test-suite

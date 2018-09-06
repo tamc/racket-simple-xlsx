@@ -15,7 +15,7 @@
           [write-xlsx-file (-> (is-a?/c xlsx%) path-string? void?)]
           ))
 
-(require "xlsx.rkt")
+(require "xslx/xlsx.rkt")
 
 (require "reader.rkt")
 
