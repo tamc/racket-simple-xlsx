@@ -159,6 +159,28 @@
       )
       
     )
+
+   (test-case
+    "test-prefix-each-line"
+    
+    (let ([str "kkd\nskdfk\n\nksjdkf\n\n"])
+      (check-equal? (prefix-each-line str "  ")
+                    "  kkd\n  skdfk\n  \n  ksjdkf\n  \n"))
+
+    (let ([str "kkd\nskdfk\n\nksjdkf"])
+      (check-equal? (prefix-each-line str "  ")
+                    "  kkd\n  skdfk\n  \n  ksjdkf\n"))
+
+    (let ([str "kkd\nskdfk\n\nksjdkf\n"])
+      (check-equal? (prefix-each-line str "  ")
+                    "  kkd\n  skdfk\n  \n  ksjdkf\n"))
+
+    (let ([str ""])
+      (check-equal? (prefix-each-line str "  ") "  \n"))
+
+    (let ([str "\n"])
+      (check-equal? (prefix-each-line str "  ") "  \n"))
+    )
     
   ))
 

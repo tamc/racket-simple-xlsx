@@ -6,6 +6,8 @@
 (require racket/list)
 (require racket/contract)
 
+(require "../../../lib/lib.rkt")
+
 (provide (contract-out
           [write-styles (-> list? list? string?)]
           [write-header (-> string?)]
@@ -29,16 +31,16 @@
 })
 
 (define (write-fonts) @S{
-  <fonts count="1">
-    <font>
+<fonts count="1">
+  <font>
     <sz val="11"/>
-      <color theme="1"/>
-      <name val="宋体"/>
-      <family val="2"/>
-      <charset val="134"/>
-      <scheme val="minor"/>
-    </font>
-  </fonts>
+    <color theme="1"/>
+    <name val="宋体"/>
+    <family val="2"/>
+    <charset val="134"/>
+    <scheme val="minor"/>
+  </font>
+</fonts>
 })
 
 (define (write-fills fill_list) @S{
@@ -91,17 +93,29 @@
 </styleSheet>
 })
 
-(define (write-styles style_list fill_list)
-  (with-output-to-string
-    (lambda ()
-      (printf "~a\n" (write-header))
-      (printf "\n")
-      (printf "~a\n" (write-fonts))
-      )))
+(define (write-styles style_list fill_list) @S{
+@|(write-header)|
+
+@|(prefix-each-line (write-fonts) "  ")|
+
+@|(prefix-each-line (write-fills fill_list) "  ")|
+
+@|(write-borders)|
+
+@|(write-cellStyleXfs)|
+
+@|(write-cellXfs style_list)|
+
+@|(write-cellStyles)|
+
+@|(write-dxfs)|
+
+@|(write-footer)|
+})
 
 (define (write-styles-file dir style_list fill_list)
   (make-directory* dir)
-  
+
   (with-output-to-file (build-path dir "styles.xml")
     #:exists 'replace
     (lambda ()

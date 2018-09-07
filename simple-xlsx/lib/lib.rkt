@@ -28,6 +28,7 @@
           [range-hash-ref (-> hash? string? any/c)]
           [flat-range-hash (-> hash? hash?)]
           [check-lines? (-> input-port? input-port? void?)]
+          [prefix-each-line (-> string? string? string?)]
           ))
 
 (define-check (check-lines? expected_port test_port)
@@ -279,3 +280,16 @@
 
                 (key-loop (cdr key_list))))
     flat_map))
+
+(define (prefix-each-line str prefix)
+  (let ([lines (regexp-split #rx"\n" str)])
+    (when (and
+           (> (length lines) 1)
+           (string=? (last lines) ""))
+          (set! lines (drop-right lines 1)))
+    (with-output-to-string
+      (lambda ()
+        (let loop ([loop_list lines])
+          (when (not (null? loop_list))
+                (printf "~a~a\n" prefix (car loop_list))
+                (loop (cdr loop_list))))))))
