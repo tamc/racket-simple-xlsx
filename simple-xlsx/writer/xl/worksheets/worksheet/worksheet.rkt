@@ -31,7 +31,13 @@
   <dimension ref="@|dimension|"/>
 })
 
-(define (write-sheet-views dimension) @S{
+(define (write-sheet-views is_active active_cell) @S{
+  <sheetViews>
+    <sheetView tabSelected="1" workbookViewId="0">
+      <selection activeCell="A1" sqref="A1"/>
+    </sheetView>
+  </sheetViews>
+
   <dimension ref="@|dimension|"/>
 })
 
