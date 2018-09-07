@@ -6,6 +6,9 @@
 
 (require rackunit "../styles.rkt")
 
+(require racket/runtime-path)
+(define-runtime-path test_file "empty-test.dat")
+
 (define test-styles
   (test-suite
    "test-styles"
@@ -13,7 +16,7 @@
    (test-case
     "test-empty-style"
     
-    (call-with-input-file "empty-test.dat"
+    (call-with-input-file test_file
       (lambda (expected)
         (call-with-input-string
          (write-styles '() '())

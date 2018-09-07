@@ -1,14 +1,39 @@
-#lang racket
+#lang at-exp racket/base
 
-(require "../../../lib/lib.rkt")
-(require "../../../xlsx/xlsx.rkt")
-(require "../../../xlsx/sheet.rkt")
+(require racket/port)
+(require racket/file)
+(require racket/class)
+(require racket/list)
+(require racket/contract)
+
+(require "../../../../lib/lib.rkt")
+(require "../../../../xlsx/xlsx.rkt")
+(require "../../../../xlsx/sheet.rkt")
 
 (provide (contract-out
+          [write-header (-> string?)]
           [write-data-sheet (-> string? (is-a?/c xlsx%) string?)]
           [write-data-sheet-file (-> path-string? (is-a?/c xlsx%) void?)]
           [get-col-width-map (-> (listof list?) hash?)]
           ))
+
+(define S string-append)
+
+(define (write-header) @S{
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<worksheet
+  xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+  xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+})
+
+(define (write-dimension dimension) @S{
+  <dimension ref="@|dimension|"/>
+})
+
+(define (write-sheet-views dimension) @S{
+  <dimension ref="@|dimension|"/>
+})
 
 (define (write-data-sheet sheet_name xlsx)
   (let ([string_index_map (send xlsx get-string-index-map)]
@@ -113,6 +138,3 @@
                     (loop-col (cdr cols) (add1 index))))
             (loop-row (cdr loop_rows))))
     col_width_map))
-                      
-                            
-

@@ -2,6 +2,9 @@
 
 (require rackunit/text-ui)
 
+(require racket/runtime-path)
+(define-runtime-path test_file "cellXfs-test.dat")
+
 (require "../../../../lib/lib.rkt")
 
 (require rackunit "../styles.rkt")
@@ -15,7 +18,7 @@
     
     (let ([style_list (list #hash((fill . 1)) #hash((fill . 2)) #hash((fill . 3)))])
       
-      (call-with-input-file "cellXfs-test.dat"
+      (call-with-input-file test_file
         (lambda (expected)
           (call-with-input-string
            (write-cellXfs style_list)

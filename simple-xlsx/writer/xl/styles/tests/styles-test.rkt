@@ -6,6 +6,9 @@
 
 (require rackunit "../styles.rkt")
 
+(require racket/runtime-path)
+(define-runtime-path test_file "styles-test.dat")
+
 (define test-styles
   (test-suite
    "test-styles"
@@ -16,7 +19,7 @@
     (let ([style_list (list #hash((fill . 1)) #hash((fill . 2)) #hash((fill . 3)))]
           [fill_list (list #hash((fgColor . "FF0000")) #hash((fgColor . "00FF00")) #hash((fgColor . "0000FF")))])
       
-      (call-with-input-file "styles-test.dat"
+      (call-with-input-file test_file
         (lambda (expected)
           (call-with-input-string
            (write-styles style_list fill_list)
