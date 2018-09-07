@@ -100,15 +100,15 @@
 
 @|(prefix-each-line (write-fills fill_list) "  ")|
 
-@|(write-borders)|
+@|(prefix-each-line (write-borders) "  ")|
 
-@|(write-cellStyleXfs)|
+@|(prefix-each-line (write-cellStyleXfs) "  ")|
 
-@|(write-cellXfs style_list)|
+@|(prefix-each-line (write-cellXfs style_list) "  ")|
 
-@|(write-cellStyles)|
+@|(prefix-each-line (write-cellStyles) "  ")|
 
-@|(write-dxfs)|
+@|(prefix-each-line (write-dxfs) "  ")|
 
 @|(write-footer)|
 })
