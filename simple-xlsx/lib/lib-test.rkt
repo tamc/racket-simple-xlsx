@@ -165,21 +165,27 @@
     
     (let ([str "kkd\nskdfk\n\nksjdkf\n\n"])
       (check-equal? (prefix-each-line str "  ")
-                    "  kkd\n  skdfk\n  \n  ksjdkf\n  \n"))
+                    "  kkd\n  skdfk\n\n  ksjdkf\n\n"))
 
     (let ([str "kkd\nskdfk\n\nksjdkf"])
       (check-equal? (prefix-each-line str "  ")
-                    "  kkd\n  skdfk\n  \n  ksjdkf"))
+                    "  kkd\n  skdfk\n\n  ksjdkf"))
 
     (let ([str "kkd\nskdfk\n\nksjdkf\n"])
       (check-equal? (prefix-each-line str "  ")
-                    "  kkd\n  skdfk\n  \n  ksjdkf\n"))
+                    "  kkd\n  skdfk\n\n  ksjdkf\n"))
 
     (let ([str ""])
       (check-equal? (prefix-each-line str "  ") ""))
 
     (let ([str "\n"])
-      (check-equal? (prefix-each-line str "  ") "  \n"))
+      (check-equal? (prefix-each-line str "  ") "\n"))
+
+    (let ([str "\n\n\n"])
+      (check-equal? (prefix-each-line str "  ") "\n\n\n"))
+
+    (let ([str "\nsskd\n\n"])
+      (check-equal? (prefix-each-line str "  ") "\n  sskd\n\n"))
     )
     
   ))

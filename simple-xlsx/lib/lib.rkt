@@ -287,7 +287,7 @@
       (let loop ([chars (string->list str)]
                  [is_prefix #t])
           (when (not (null? chars))
-                (when is_prefix
+                (when (and is_prefix (not (char=? (car chars) #\newline)))
                       (printf "~a" prefix))
                 
                 (printf "~a" (car chars))
