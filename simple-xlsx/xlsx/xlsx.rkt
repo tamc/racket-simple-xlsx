@@ -186,18 +186,18 @@
 
                    (if (not (hash-has-key? fill_code_to_fill_index_hash fill_hash_code))
                        (begin
-                         (hash-set! fill_code_to_fill_index_hash fill_hash_code (length fill_list))
+                         (hash-set! fill_code_to_fill_index_hash fill_hash_code (add1 (length fill_list)))
                          (set-xlsx-style-fill_list! style `(,@fill_list ,fill_hash))
-                         (hash-set! style_hash 'fill (length fill_list)))
+                         (hash-set! style_hash 'fill (add1 (length fill_list))))
                        (hash-set! style_hash 'fill (hash-ref fill_code_to_fill_index_hash fill_hash_code)))
                    
                    (set! style_hash_code (equal-hash-code style_hash))
                    
                    (if (not (hash-has-key? style_code_to_style_index_hash style_hash_code))
                        (begin
-                         (hash-set! style_code_to_style_index_hash style_hash_code (length style_list))
+                         (hash-set! style_code_to_style_index_hash style_hash_code (add1 (length style_list)))
                          (set-xlsx-style-style_list! style `(,@style_list ,style_hash))
-                         (hash-set! range_to_style_index_hash cell_range (length style_list)))
+                         (hash-set! range_to_style_index_hash cell_range (add1 (length style_list))))
                        (hash-set! range_to_style_index_hash cell_range (hash-ref style_code_to_style_index_hash style_hash_code)))
                    )))
 

@@ -24,7 +24,7 @@
                                  ))
             (send xlsx set-data-sheet-col-width! #:sheet_name "DataSheet" #:col_range "A-B" #:width 50)
 
-            (send xlsx set-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B2-C3" #:style '( (fgColor . "FF00000") ))
+            (send xlsx set-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B2-C3" #:style '( (fgColor . "FF0000") ))
 
             (send xlsx set-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "C4-D4" #:style '( (fgColor . "0000FF") ))
 

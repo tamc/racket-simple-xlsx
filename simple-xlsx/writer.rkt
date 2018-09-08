@@ -19,7 +19,7 @@
 (require "writer/xl/theme/theme.rkt")
 (require "writer/xl/workbook.rkt")
 (require "writer/xl/worksheets/_rels/rels.rkt")
-(require "writer/xl/worksheets/worksheet.rkt")
+(require "writer/xl/worksheets/worksheet/worksheet.rkt")
 (require "writer/xl/charts/chart.rkt")
 (require "writer/xl/chartsheets/chartsheet.rkt")
 (require "writer/xl/chartsheets/_rels/chartsheet-rels.rkt")

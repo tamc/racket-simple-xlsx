@@ -36,14 +36,14 @@
           (check-equal? (hash-count range_to_index_hash) 1)
 
           (let* ([style_index (hash-ref range_to_index_hash "A1-A4")]
-                 [style (list-ref style_list style_index)]
+                 [style (list-ref style_list (sub1 style_index))]
                  [fill_index (hash-ref style 'fill)]
-                 [fill (list-ref fill_list fill_index)])
+                 [fill (list-ref fill_list (sub1 fill_index))])
 
-            (check-equal? style_index 0)
-            (check-equal? fill_index 0)
+            (check-equal? style_index 1)
+            (check-equal? fill_index 1)
             (check-equal? (hash-count style) 1)
-            (check-equal? (hash-ref style 'fill) 0)
+            (check-equal? (hash-ref style 'fill) 1)
 
             (check-equal? (hash-count fill) 1)
             (check-equal? (hash-ref fill 'fgColor) "red")
@@ -66,14 +66,14 @@
           (check-equal? (hash-count range_to_index_hash) 2)
 
           (let* ([style_index (hash-ref range_to_index_hash "B1-B4")]
-                 [style (list-ref style_list style_index)]
+                 [style (list-ref style_list (sub1 style_index))]
                  [fill_index (hash-ref style 'fill)]
-                 [fill (list-ref fill_list fill_index)])
+                 [fill (list-ref fill_list (sub1 fill_index))])
 
-            (check-equal? style_index 1)
-            (check-equal? fill_index 1)
+            (check-equal? style_index 2)
+            (check-equal? fill_index 2)
             (check-equal? (hash-count style) 1)
-            (check-equal? (hash-ref style 'fill) 1)
+            (check-equal? (hash-ref style 'fill) 2)
 
             (check-equal? (hash-count fill) 1)
             (check-equal? (hash-ref fill 'fgColor) "blue")
@@ -96,14 +96,14 @@
           (check-equal? (hash-count range_to_index_hash) 3)
 
           (let* ([style_index (hash-ref range_to_index_hash "C1-C4")]
-                 [style (list-ref style_list style_index)]
+                 [style (list-ref style_list (sub1 style_index))]
                  [fill_index (hash-ref style 'fill)]
-                 [fill (list-ref fill_list fill_index)])
+                 [fill (list-ref fill_list (sub1 fill_index))])
 
-            (check-equal? style_index 0)
-            (check-equal? fill_index 0)
+            (check-equal? style_index 1)
+            (check-equal? fill_index 1)
             (check-equal? (hash-count style) 1)
-            (check-equal? (hash-ref style 'fill) 0)
+            (check-equal? (hash-ref style 'fill) 1)
 
             (check-equal? (hash-count fill) 1)
             (check-equal? (hash-ref fill 'fgColor) "red")
@@ -111,9 +111,9 @@
 
         (let ([style_map (send xlsx get-cell-to-style-index-map "测试1")])
           (check-equal? (hash-count style_map) 12)
-          (check-equal? (hash-ref style_map "A1") 0)
-          (check-equal? (hash-ref style_map "B2") 1)
-          (check-equal? (hash-ref style_map "C2") 0)
+          (check-equal? (hash-ref style_map "A1") 1)
+          (check-equal? (hash-ref style_map "B2") 2)
+          (check-equal? (hash-ref style_map "C2") 1)
           )
 
         )))))
