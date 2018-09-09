@@ -4,6 +4,9 @@
 
 (require rackunit "../../main.rkt")
 
+(require racket/runtime-path)
+(define-runtime-path test_file "test.xlsx")
+
 (define write-test
   (test-suite
    "test-normal-data-sheet"
@@ -24,9 +27,9 @@
                                  ))
             (send xlsx set-data-sheet-col-width! #:sheet_name "DataSheet" #:col_range "A-B" #:width 50)
 
-            (send xlsx set-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B2-C3" #:style '( (fgColor . "FF0000") ))
+            (send xlsx set-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B2-C3" #:style '( (backgroundColor . "FF0000") ))
 
-            (send xlsx set-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "C4-D4" #:style '( (fgColor . "0000FF") ))
+            (send xlsx set-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "C4-D4" #:style '( (backgroundColor . "0000FF") ))
 
             (send xlsx add-chart-sheet #:sheet_name "LineChart1" #:topic "Horizontal Data" #:x_topic "Kg")
             (send xlsx set-chart-x-data! #:sheet_name "LineChart1" #:data_sheet_name "DataSheet" #:data_range "B1-D1")
@@ -66,11 +69,11 @@
             (send xlsx set-chart-x-data! #:sheet_name "PieChart3D" #:data_sheet_name "DataSheet" #:data_range "B1-D1" )
             (send xlsx add-chart-serial! #:sheet_name "PieChart3D" #:data_sheet_name "DataSheet" #:data_range "B2-D2" #:y_topic "CAT")
 
-            (write-xlsx-file xlsx "test.xlsx")
+            (write-xlsx-file xlsx test_file)
             )
 
           (with-input-from-xlsx-file
-           "test.xlsx"
+           test_file
            (lambda (xlsx)
              (check-equal? (get-sheet-names xlsx) '("DataSheet" "LineChart1" "LineChart2" "LineChart3D" "BarChart" "BarChart3D" "PieChart" "PieChart3D"))
 

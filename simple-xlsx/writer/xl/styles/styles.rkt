@@ -49,10 +49,10 @@
 @|(let loop ([loop_list fill_list]
              [result_str ""])
     (if (not (null? loop_list))
-      (let ([fgColor (hash-ref (car loop_list) 'fgColor "FFFFFF")])
+      (let ([backgroundColor (hash-ref (car loop_list) 'backgroundColor "FFFFFF")])
         (loop 
           (cdr loop_list)
-          (string-append result_str (format "  <fill><patternFill patternType=\"solid\"><fgColor rgb=\"~a\"/><bgColor indexed=\"64\"/></patternFill></fill>\n" fgColor))))
+          (string-append result_str (format "  <fill><patternFill patternType=\"solid\"><fgColor rgb=\"~a\"/><bgColor indexed=\"64\"/></patternFill></fill>\n" backgroundColor))))
         result_str))|</fills>
 })
 

@@ -176,7 +176,7 @@
                              (symbol? (car style_pair)))
                             (cond
                              [(or
-                               (eq? (car style_pair) 'fgColor)
+                               (eq? (car style_pair) 'backgroundColor)
                                )
                               (hash-set! fill_hash (car style_pair) (cdr style_pair))]
                              )))

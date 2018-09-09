@@ -17,7 +17,7 @@
     "test-styles"
     
     (let ([style_list (list #hash((fill . 1)) #hash((fill . 2)) #hash((fill . 3)))]
-          [fill_list (list #hash((fgColor . "FF0000")) #hash((fgColor . "00FF00")) #hash((fgColor . "0000FF")))])
+          [fill_list (list #hash((backgroundColor . "FF0000")) #hash((backgroundColor . "00FF00")) #hash((backgroundColor . "0000FF")))])
       
       (call-with-input-file test_file
         (lambda (expected)

@@ -19,7 +19,7 @@
 
       (let* ([sheet (sheet-content (send xlsx get-sheet-by-name "测试1"))])
 
-        (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "A1-A4" #:style '( (fgColor . "red") ))
+        (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "A1-A4" #:style '( (backgroundColor . "red") ))
 
         (let* ([xlsx_style (get-field style xlsx)]
                [range_to_index_hash (data-sheet-range_to_style_index_hash sheet)]
@@ -46,10 +46,10 @@
             (check-equal? (hash-ref style 'fill) 1)
 
             (check-equal? (hash-count fill) 1)
-            (check-equal? (hash-ref fill 'fgColor) "red")
+            (check-equal? (hash-ref fill 'backgroundColor) "red")
             ))
 
-        (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "B1-B4" #:style '( (fgColor . "blue") ))
+        (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "B1-B4" #:style '( (backgroundColor . "blue") ))
 
         (let* ([xlsx_style (get-field style xlsx)]
                [range_to_index_hash (data-sheet-range_to_style_index_hash sheet)]
@@ -76,10 +76,10 @@
             (check-equal? (hash-ref style 'fill) 2)
 
             (check-equal? (hash-count fill) 1)
-            (check-equal? (hash-ref fill 'fgColor) "blue")
+            (check-equal? (hash-ref fill 'backgroundColor) "blue")
             ))
 
-        (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "C1-C4" #:style '( (fgColor . "red") ))
+        (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "C1-C4" #:style '( (backgroundColor . "red") ))
 
         (let* ([xlsx_style (get-field style xlsx)]
                [range_to_index_hash (data-sheet-range_to_style_index_hash sheet)]
@@ -106,7 +106,7 @@
             (check-equal? (hash-ref style 'fill) 1)
 
             (check-equal? (hash-count fill) 1)
-            (check-equal? (hash-ref fill 'fgColor) "red")
+            (check-equal? (hash-ref fill 'backgroundColor) "red")
             ))
 
         (let ([style_map (send xlsx get-cell-to-style-index-map "测试1")])
