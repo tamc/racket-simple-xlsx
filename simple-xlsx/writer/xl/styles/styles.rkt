@@ -9,9 +9,9 @@
 (require "../../../lib/lib.rkt")
 
 (provide (contract-out
-          [write-styles (-> list? list? string?)]
+          [write-styles (-> list? list? list? string?)]
           [write-header (-> string?)]
-          [write-fonts (-> string?)]
+          [write-fonts (-> list? string?)]
           [write-fills (-> list? string?)]
           [write-borders (-> string?)]
           [write-cellStyleXfs (-> string?)]
@@ -30,8 +30,8 @@
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
 })
 
-(define (write-fonts) @S{
-<fonts count="1">
+(define (write-fonts font_list) @S{
+<fonts count="@|(number->string (add1 (length font_list)))|">
   <font>
     <sz val="11"/>
     <color theme="1"/>
@@ -40,7 +40,22 @@
     <charset val="134"/>
     <scheme val="minor"/>
   </font>
-</fonts>
+
+@|(with-output-to-string
+    (lambda ()
+      (let loop ([loop_list font_list])
+        (when (not (null? loop_list))
+          (let ([fontSize (hash-ref (car loop_list) 'fontSize 11)])
+            (printf "  <font>\n")
+            (printf "    <sz val=\"~a\"/>\n" fontSize)
+            (printf "    <color theme=\"1\"/>\n")
+            (printf "    <name val=\"宋体\"/>\n")
+            (printf "    <family val=\"2\"/>\n")
+            (printf "    <charset val=\"134\"/>\n")
+            (printf "    <scheme val=\"minor\"/>\n")
+            (printf "  </font>\n")
+            (when (> (length loop_list) 1) (printf "\n"))
+            (loop (cdr loop_list)))))))|</fonts>
 })
 
 (define (write-fills fill_list) @S{
@@ -74,10 +89,11 @@
 @|(let loop ([loop_list style_list]
              [result_str ""])
     (if (not (null? loop_list))
-      (let ([fill (hash-ref (car loop_list) 'fill 0)])
+      (let ([fill (hash-ref (car loop_list) 'fill 0)]
+            [font (hash-ref (car loop_list) 'font 0)])
         (loop
           (cdr loop_list)
-          (string-append result_str (format "  <xf numFmtId=\"0\" fontId=\"0\" fillId=\"~a\" borderId=\"0\" xfId=\"0\"><alignment vertical=\"center\"/></xf>\n" fill))))
+          (string-append result_str (format "  <xf numFmtId=\"0\" fontId=\"~a\" fillId=\"~a\" borderId=\"0\" xfId=\"0\"><alignment vertical=\"center\"/></xf>\n" font fill))))
         result_str))|</cellXfs>
 })
 
@@ -93,10 +109,10 @@
 </styleSheet>
 })
 
-(define (write-styles style_list fill_list) @S{
+(define (write-styles style_list fill_list font_list) @S{
 @|(write-header)|
 
-@|(prefix-each-line (write-fonts) "  ")|
+@|(prefix-each-line (write-fonts font_list) "  ")|
 
 @|(prefix-each-line (write-fills fill_list) "  ")|
 

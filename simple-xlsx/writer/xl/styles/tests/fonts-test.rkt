@@ -7,39 +7,26 @@
 (require rackunit "../styles.rkt")
 
 (require racket/runtime-path)
-(define-runtime-path test_file "styles-test.dat")
+(define-runtime-path test_file "fonts-test.dat")
 
 (define test-styles
   (test-suite
    "test-styles"
 
    (test-case
-    "test-styles"
+    "test-color-style"
     
-    (let ([style_list 
-           (list 
-            #hash((fill . 1) (font . 3)) 
-            #hash((fill . 2))
-            #hash((fill . 3) (font . 1))
-            #hash((font . 2))
-            )
-           ]
-          [fill_list 
-           (list 
-            #hash((backgroundColor . "FF0000")) 
-            #hash((backgroundColor . "00FF00")) 
-            #hash((backgroundColor . "0000FF")))]
-          [font_list 
+    (let ([font_list 
            (list 
             #hash((fontSize . 20)) 
             #hash((fontSize . 30))
             #hash((fontSize . 40))
             )])
-
+      
       (call-with-input-file test_file
         (lambda (expected)
           (call-with-input-string
-           (write-styles style_list fill_list font_list)
+           (write-fonts font_list)
            (lambda (actual)
              (check-lines? expected actual)))))
       ))))

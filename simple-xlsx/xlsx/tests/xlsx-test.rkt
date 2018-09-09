@@ -13,7 +13,9 @@
     "test-add-data-sheet-string-item-map"
 
     (let ([xlsx (new xlsx%)])
-      (send xlsx add-data-sheet #:sheet_name "测试1" #:sheet_data '((1 2 "chenxiao") (3 4 "xiaomin") (5 6 "chenxiao") (1 "xx" "simmone")))
+      (send xlsx add-data-sheet 
+            #:sheet_name "测试1" 
+            #:sheet_data '((1 2 "chenxiao") (3 4 "xiaomin") (5 6 "chenxiao") (1 "xx" "simmone")))
       
       (let ([string_item_map (get-field string_item_map xlsx)])
         (check-equal? (hash-count string_item_map) 4)
