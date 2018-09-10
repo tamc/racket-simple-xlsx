@@ -12,6 +12,8 @@
                    (style_list list?)
                    (fill_code_to_fill_index_hash hash?)
                    (fill_list list?)
+                   (font_code_to_font_index_hash hash?)
+                   (font_list list?)
                    )]
           ))
 
@@ -20,6 +22,8 @@
                     [style_list #:mutable]
                     [fill_code_to_fill_index_hash #:mutable]
                     [fill_list #:mutable]
+                    [font_code_to_font_index_hash #:mutable]
+                    [font_list #:mutable]
                     ))
 
 (define xlsx%
@@ -30,7 +34,7 @@
           [sheets '()]
           [sheet_name_map (make-hash)]
           [string_item_map (make-hash)]
-          [style (xlsx-style (make-hash) '() (make-hash) '())]
+          [style (xlsx-style (make-hash) '() (make-hash) '() (make-hash) '())]
           )
          
          (define/public (add-data-sheet #:sheet_name sheet_name #:sheet_data sheet_data)
@@ -167,6 +171,10 @@
                         [fill_hash_code #f]
                         [fill_code_to_fill_index_hash (xlsx-style-fill_code_to_fill_index_hash style)]
                         [fill_list (xlsx-style-fill_list style)]
+                        [font_hash (make-hash)]
+                        [font_hash_code #f]
+                        [font_code_to_font_index_hash (xlsx-style-font_code_to_font_index_hash style)]
+                        [font_list (xlsx-style-font_list style)]
                         )
                    
                    (for-each
@@ -176,29 +184,45 @@
                              (symbol? (car style_pair)))
                             (cond
                              [(or
-                               (eq? (car style_pair) 'fgColor)
+                               (eq? (car style_pair) 'backgroundColor)
                                )
                               (hash-set! fill_hash (car style_pair) (cdr style_pair))]
+                             [(or
+                               (eq? (car style_pair) 'fontSize)
+                               )
+                              (hash-set! font_hash (car style_pair) (cdr style_pair))]
                              )))
                     style_pair_list)
                    
-                   (set! fill_hash_code (equal-hash-code fill_hash))
+                   (when (> (hash-count fill_hash) 1)
+                         (set! fill_hash_code (equal-hash-code fill_hash))
 
-                   (if (not (hash-has-key? fill_code_to_fill_index_hash fill_hash_code))
-                       (begin
-                         (hash-set! fill_code_to_fill_index_hash fill_hash_code (length fill_list))
-                         (set-xlsx-style-fill_list! style `(,@fill_list ,fill_hash))
-                         (hash-set! style_hash 'fill (length fill_list)))
-                       (hash-set! style_hash 'fill (hash-ref fill_code_to_fill_index_hash fill_hash_code)))
+                         (if (not (hash-has-key? fill_code_to_fill_index_hash fill_hash_code))
+                             (begin
+                               (hash-set! fill_code_to_fill_index_hash fill_hash_code (length fill_list))
+                               (set-xlsx-style-fill_list! style `(,@fill_list ,fill_hash))
+                               (hash-set! style_hash 'fill (length fill_list)))
+                             (hash-set! style_hash 'fill (hash-ref fill_code_to_fill_index_hash fill_hash_code))))
+
+                   (when (> (hash-count font_hash) 1)
+                         (set! font_hash_code (equal-hash-code font_hash))
+
+                         (if (not (hash-has-key? font_code_to_font_index_hash font_hash_code))
+                             (begin
+                               (hash-set! font_code_to_font_index_hash font_hash_code (length font_list))
+                               (set-xlsx-style-font_list! style `(,@font_list ,font_hash))
+                               (hash-set! style_hash 'font (length font_list)))
+                             (hash-set! style_hash 'font (hash-ref font_code_to_font_index_hash font_hash_code))))
                    
-                   (set! style_hash_code (equal-hash-code style_hash))
-                   
-                   (if (not (hash-has-key? style_code_to_style_index_hash style_hash_code))
-                       (begin
-                         (hash-set! style_code_to_style_index_hash style_hash_code (length style_list))
-                         (set-xlsx-style-style_list! style `(,@style_list ,style_hash))
-                         (hash-set! range_to_style_index_hash cell_range (length style_list)))
-                       (hash-set! range_to_style_index_hash cell_range (hash-ref style_code_to_style_index_hash style_hash_code)))
+                   (when (> (hash-count style_hash) 1)
+                         (set! style_hash_code (equal-hash-code style_hash))
+                         
+                         (if (not (hash-has-key? style_code_to_style_index_hash style_hash_code))
+                             (begin
+                               (hash-set! style_code_to_style_index_hash style_hash_code (length style_list))
+                               (set-xlsx-style-style_list! style `(,@style_list ,style_hash))
+                               (hash-set! range_to_style_index_hash cell_range (length style_list)))
+                             (hash-set! range_to_style_index_hash cell_range (hash-ref style_code_to_style_index_hash style_hash_code))))
                    )))
 
          (define/public (get-cell-to-style-index-map sheet_name)
@@ -208,5 +232,7 @@
          (define/public (get-style-list) (xlsx-style-style_list style))
 
          (define/public (get-fill-list) (xlsx-style-fill_list style))
+
+         (define/public (get-font-list) (xlsx-style-font_list style))
 
          ))
