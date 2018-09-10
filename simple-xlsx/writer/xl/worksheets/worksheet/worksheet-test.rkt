@@ -1,6 +1,7 @@
 #lang racket
 
-(require "../../../xlsx/xlsx.rkt")
+(require "../../../../xlsx/xlsx.rkt")
+(require "../../../../lib/lib.rkt")
 
 (require rackunit/text-ui)
 
@@ -17,7 +18,9 @@
     "test-write-data-sheet"
 
     (let ([xlsx (new xlsx%)])
-      (send xlsx add-data-sheet #:sheet_name "Sheet1" #:sheet_data '(("month1" "month2" "month3" "month4" "real") (201601 100 110 1110 6.9)))
+      (send xlsx add-data-sheet 
+            #:sheet_name "Sheet1" 
+            #:sheet_data '(("month1" "month2" "month3" "month4" "real") (201601 100 110 1110 6.9)))
 
       (call-with-input-file test_file
         (lambda (expected)

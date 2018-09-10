@@ -282,14 +282,16 @@
     flat_map))
 
 (define (prefix-each-line str prefix)
-  (let ([lines (regexp-split #rx"\n" str)])
-    (when (and
-           (> (length lines) 1)
-           (string=? (last lines) ""))
-          (set! lines (drop-right lines 1)))
-    (with-output-to-string
-      (lambda ()
-        (let loop ([loop_list lines])
-          (when (not (null? loop_list))
-                (printf "~a~a\n" prefix (car loop_list))
-                (loop (cdr loop_list))))))))
+  (with-output-to-string
+    (lambda ()
+      (let loop ([chars (string->list str)]
+                 [is_prefix #t])
+          (when (not (null? chars))
+                (when (and is_prefix (not (char=? (car chars) #\newline)))
+                      (printf "~a" prefix))
+                
+                (printf "~a" (car chars))
+
+                (if (char=? (car chars) #\newline)
+                    (loop (cdr chars) #t)
+                    (loop (cdr chars) #f)))))))

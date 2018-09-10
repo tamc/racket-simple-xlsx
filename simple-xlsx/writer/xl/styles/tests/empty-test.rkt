@@ -16,8 +16,6 @@
    (test-case
     "test-empty-style"
     
-    (printf "[~a]\n" (prefix-each-line (write-fonts) "  "))
-    
     (call-with-input-file test_file
       (lambda (expected)
         (call-with-input-string

@@ -1,0 +1,37 @@
+<fonts count="4">
+  <font>
+    <sz val="11"/>
+    <color theme="1"/>
+    <name val="宋体"/>
+    <family val="2"/>
+    <charset val="134"/>
+    <scheme val="minor"/>
+  </font>
+
+  <font>
+    <sz val="20"/>
+    <color theme="1"/>
+    <name val="宋体"/>
+    <family val="2"/>
+    <charset val="134"/>
+    <scheme val="minor"/>
+  </font>
+
+  <font>
+    <sz val="30"/>
+    <color theme="1"/>
+    <name val="宋体"/>
+    <family val="2"/>
+    <charset val="134"/>
+    <scheme val="minor"/>
+  </font>
+
+  <font>
+    <sz val="40"/>
+    <color theme="1"/>
+    <name val="宋体"/>
+    <family val="2"/>
+    <charset val="134"/>
+    <scheme val="minor"/>
+  </font>
+</fonts>
