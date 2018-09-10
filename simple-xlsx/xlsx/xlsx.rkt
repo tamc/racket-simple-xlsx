@@ -159,7 +159,7 @@
                      (loop (cdr loop_list) (add1 index))))
              string_index_map))
 
-         (define/public (set-data-sheet-cell-style! #:sheet_name sheet_name #:cell_range cell_range #:style style_pair_list)
+         (define/public (write-data-sheet-cell-style! #:sheet_name sheet_name)
            (when (check-cell-range cell_range)
                  (let* ([sheet (sheet-content (get-sheet-by-name sheet_name))]
                         [range_to_style_index_hash (data-sheet-range_to_style_index_hash sheet)]
