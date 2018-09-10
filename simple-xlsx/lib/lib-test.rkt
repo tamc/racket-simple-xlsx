@@ -109,12 +109,12 @@
     )
    
    (test-case
-    "test-range-hash-ref"
+    "test-range-to-cell-hash and combine-hash"
     
-    (let ([range_hash (make-hash)])
-      (hash-set! range_hash "A1-A2" 1)
-      (hash-set! range_hash "A3-B4" 2)
-      (hash-set! range_hash "C1-AA10" 3)
+    (let* ([range1_hash (range-to-cell-hash "A1-A2" 1)]
+           [range2_hash (range-to-cell-hash "A3-B4" 1)]
+           [range3_hash (range-to-cell-hash "C1-AA10" 3)]
+           [range_hash (combine-hash range1_hash range2_hash range3_hash)])
       
       (check-equal? (range-hash-ref range_hash "A1") 1)
       (check-equal? (range-hash-ref range_hash "A2") 1)
@@ -128,14 +128,11 @@
       ))
 
    (test-case
-    "test-flat-range-hash"
+    "test-range-to-cell-hash"
     
-    (let ([range_hash (make-hash)]
-          [flat_range_hash #f])
-      (hash-set! range_hash "A1-A2" 1)
-      (hash-set! range_hash "A3-B4" 2)
-      
-      (set! flat_range_hash (flat-range-hash range_hash))
+    (let* ([range1_hash (range-to-cell-hash "A1-A2" 1)]
+           [range2_hash (range-to-cell-hash "A3-B4" 2)]
+           [flat_range_hash (combine-hash (list range1_hash range2_hash))])
       
       (check-equal? (hash-count flat_range_hash) 6)
       (check-equal? (hash-ref flat_range_hash "A1") 1)
@@ -145,12 +142,9 @@
       (check-equal? (hash-ref flat_range_hash "B3") 2)
       (check-equal? (hash-ref flat_range_hash "B4") 2))
 
-    (let ([range_hash (make-hash)]
-          [flat_range_hash #f])
-      (hash-set! range_hash "A2-A1" 1)
-      (hash-set! range_hash "A5-E14" 2)
-      
-      (set! flat_range_hash (flat-range-hash range_hash))
+    (let* ([range1_hash (range-to-cell-hash "A2-A1" 1)]
+           [range2_hash (range-to-cell-hash "A5-E14" 2)]
+           [flat_range_hash (combine-hash (list range1_hash range2_hash))])
       
       (check-equal? (hash-count flat_range_hash) 50)
       (check-equal? (hash-ref flat_range_hash "A5") 2)
