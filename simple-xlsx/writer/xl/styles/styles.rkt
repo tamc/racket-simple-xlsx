@@ -19,7 +19,7 @@
           [write-cellStyles (-> string?)]
           [write-dxfs (-> string?)]
           [write-footer (-> string?)]
-          [write-styles-file (-> path-string? list? list? void?)]
+          [write-styles-file (-> path-string? list? list? list? void?)]
           ))
 
 (define S string-append)
@@ -40,11 +40,11 @@
     <charset val="134"/>
     <scheme val="minor"/>
   </font>
-
 @|(with-output-to-string
     (lambda ()
       (let loop ([loop_list font_list])
         (when (not (null? loop_list))
+          (printf "\n")
           (let ([fontSize (hash-ref (car loop_list) 'fontSize 11)])
             (printf "  <font>\n")
             (printf "    <sz val=\"~a\"/>\n" fontSize)
@@ -54,7 +54,6 @@
             (printf "    <charset val=\"134\"/>\n")
             (printf "    <scheme val=\"minor\"/>\n")
             (printf "  </font>\n")
-            (when (> (length loop_list) 1) (printf "\n"))
             (loop (cdr loop_list)))))))|</fonts>
 })
 
@@ -129,7 +128,7 @@
 @|(write-footer)|
 })
 
-(define (write-styles-file dir style_list fill_list)
+(define (write-styles-file dir style_list fill_list font_list)
   (make-directory* dir)
 
   (with-output-to-file (build-path dir "styles.xml")
@@ -138,4 +137,5 @@
       (printf "~a" (write-styles 
                     style_list
                     fill_list
+                    font_list
                     )))))

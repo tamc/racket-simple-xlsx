@@ -19,7 +19,7 @@
     (call-with-input-file test_file
       (lambda (expected)
         (call-with-input-string
-         (write-styles '() '())
+         (write-styles '() '() '())
          (lambda (actual)
            (check-lines? expected actual))))))
    ))

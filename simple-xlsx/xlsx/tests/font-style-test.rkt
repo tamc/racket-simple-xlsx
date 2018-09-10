@@ -36,21 +36,20 @@
           (check-equal? (hash-count range_to_index_hash) 1)
 
           (let* ([style_index (hash-ref range_to_index_hash "A1-A4")]
-                 [style (list-ref style_list style_index)]
+                 [style (list-ref style_list (sub1 style_index))]
                  [font_index (hash-ref style 'font)]
-                 [font (list-ref font_list font_index)])
+                 [font (list-ref font_list (sub1 font_index))])
 
-            (check-equal? style_index 0)
-            (check-equal? font_index 0)
-            (printf "~a\n" style)
+            (check-equal? style_index 1)
+            (check-equal? font_index 1)
             (check-equal? (hash-count style) 1)
-            (check-equal? (hash-ref style 'font) 0)
+            (check-equal? (hash-ref style 'font) 1)
 
             (check-equal? (hash-count font) 1)
             (check-equal? (hash-ref font 'fontSize) 20)
             ))
 
-        (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "A1-A4" #:style '( (fontSize . 30) ))
+        (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "B1-B4" #:style '( (fontSize . 30) ))
 
         (let* ([xlsx_style (get-field style xlsx)]
                [range_to_index_hash (data-sheet-range_to_style_index_hash sheet)]
@@ -67,20 +66,20 @@
           (check-equal? (hash-count range_to_index_hash) 2)
 
           (let* ([style_index (hash-ref range_to_index_hash "B1-B4")]
-                 [style (list-ref style_list style_index)]
+                 [style (list-ref style_list (sub1 style_index))]
                  [font_index (hash-ref style 'font)]
-                 [font (list-ref font_list font_index)])
+                 [font (list-ref font_list (sub1 font_index))])
 
-            (check-equal? style_index 1)
-            (check-equal? font_index 1)
+            (check-equal? style_index 2)
+            (check-equal? font_index 2)
             (check-equal? (hash-count style) 1)
-            (check-equal? (hash-ref style 'font) 1)
+            (check-equal? (hash-ref style 'font) 2)
 
             (check-equal? (hash-count font) 1)
             (check-equal? (hash-ref font 'fontSize) 30)
             ))
 
-        (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "A1-A4" #:style '( (fontSize . 20) ))
+        (send xlsx set-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "C1-C4" #:style '( (fontSize . 20) ))
 
         (let* ([xlsx_style (get-field style xlsx)]
                [range_to_index_hash (data-sheet-range_to_style_index_hash sheet)]
@@ -97,14 +96,14 @@
           (check-equal? (hash-count range_to_index_hash) 3)
 
           (let* ([style_index (hash-ref range_to_index_hash "C1-C4")]
-                 [style (list-ref style_list style_index)]
+                 [style (list-ref style_list (sub1 style_index))]
                  [font_index (hash-ref style 'font)]
-                 [font (list-ref font_list font_index)])
+                 [font (list-ref font_list (sub1 font_index))])
 
-            (check-equal? style_index 0)
-            (check-equal? font_index 0)
+            (check-equal? style_index 1)
+            (check-equal? font_index 1)
             (check-equal? (hash-count style) 1)
-            (check-equal? (hash-ref style 'font) 0)
+            (check-equal? (hash-ref style 'font) 1)
 
             (check-equal? (hash-count font) 1)
             (check-equal? (hash-ref font 'fontSize) 20)

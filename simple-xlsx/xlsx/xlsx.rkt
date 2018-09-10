@@ -194,34 +194,34 @@
                              )))
                     style_pair_list)
                    
-                   (when (> (hash-count fill_hash) 1)
+                   (when (> (hash-count fill_hash) 0)
                          (set! fill_hash_code (equal-hash-code fill_hash))
 
                          (if (not (hash-has-key? fill_code_to_fill_index_hash fill_hash_code))
                              (begin
-                               (hash-set! fill_code_to_fill_index_hash fill_hash_code (length fill_list))
+                               (hash-set! fill_code_to_fill_index_hash fill_hash_code (add1 (length fill_list)))
                                (set-xlsx-style-fill_list! style `(,@fill_list ,fill_hash))
-                               (hash-set! style_hash 'fill (length fill_list)))
+                               (hash-set! style_hash 'fill (add1 (length fill_list))))
                              (hash-set! style_hash 'fill (hash-ref fill_code_to_fill_index_hash fill_hash_code))))
 
-                   (when (> (hash-count font_hash) 1)
+                   (when (> (hash-count font_hash) 0)
                          (set! font_hash_code (equal-hash-code font_hash))
 
                          (if (not (hash-has-key? font_code_to_font_index_hash font_hash_code))
                              (begin
-                               (hash-set! font_code_to_font_index_hash font_hash_code (length font_list))
+                               (hash-set! font_code_to_font_index_hash font_hash_code (add1 (length font_list)))
                                (set-xlsx-style-font_list! style `(,@font_list ,font_hash))
-                               (hash-set! style_hash 'font (length font_list)))
+                               (hash-set! style_hash 'font (add1 (length font_list))))
                              (hash-set! style_hash 'font (hash-ref font_code_to_font_index_hash font_hash_code))))
                    
-                   (when (> (hash-count style_hash) 1)
+                   (when (> (hash-count style_hash) 0)
                          (set! style_hash_code (equal-hash-code style_hash))
                          
                          (if (not (hash-has-key? style_code_to_style_index_hash style_hash_code))
                              (begin
-                               (hash-set! style_code_to_style_index_hash style_hash_code (length style_list))
+                               (hash-set! style_code_to_style_index_hash style_hash_code (add1 (length style_list)))
                                (set-xlsx-style-style_list! style `(,@style_list ,style_hash))
-                               (hash-set! range_to_style_index_hash cell_range (length style_list)))
+                               (hash-set! range_to_style_index_hash cell_range (add1 (length style_list))))
                              (hash-set! range_to_style_index_hash cell_range (hash-ref style_code_to_style_index_hash style_hash_code))))
                    )))
 
