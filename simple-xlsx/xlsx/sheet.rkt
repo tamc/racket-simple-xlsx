@@ -13,6 +13,7 @@
                   (
                    (rows list?)
                    (width_hash hash?)
+                   (cell_to_style_hash hash?)
                    (cell_to_style_index_hash hash?)
                    )]
           [struct chart-sheet
