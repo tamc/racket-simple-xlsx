@@ -165,7 +165,7 @@
                         [cell_to_style_code_hash (data-sheet-cell_to_style_code_hash sheet)]
                         [style_code_to_style_hash (data-sheet-style_code_to_style_hash sheet)]
                         [style_map (make-hash)]
-                        [new_cell_to_style_code_hash #f])
+                        [style_code #f])
 
                    (for-each
                     (lambda (style_pair)
@@ -182,19 +182,16 @@
                              )))
                     style_pair_list)
                    
-                   (set! new_cell_style_code_hash (range-to-cell-hash cell_range (equal-hash-code style_hash)))
+                   (set! style_code (equal-hash-code style_hash))
+                   
+                   (when (not (hash-has-key? style_code_to_style_hash style_code))
+                         (hash-set! style_code_to_style_hash style_code style_hash))
+                   
+                   (set-data-sheet-cell_to_style_code_hash! 
+                    (sheet-content (get-sheet-by-name sheet_name)) 
+                    (combine-hash-in-hash (list cell_to_style_code_hash (range-to-cell-hash cell_range style_code)))))))
 
-                   (let loop ([loop_list (hash-keys new_cell_to_style_code_hash)])
-                     (when (not (null? loop_list))
-                           (when (hash-has-key? cell_style_code_hash (car loop_list))
-                                 (let ([old_style_map 
-                                        (hash-ref style_code_to_style_hash 
-                                                  (hash-ref cell_to_style_code_hash (car loop_list)))])
-                                   (hash-set! new_cell_style_code_hash (car loop_list) (combine-hash old_style_map style_map))))
-                           (loop (cdr loop_list))))
-           )
-
-         (define/public (set-data-sheet-cell-style! #:sheet_name sheet_name #:cell_range cell_range #:style style_pair_list)
+         (define/public (write-data-sheet-style! #:sheet_name sheet_name)
            (when (check-cell-range cell_range)
                  (let* ([sheet (sheet-content (get-sheet-by-name sheet_name))]
                         [cell_to_style_hash (data-sheet-cell_to_style_hash sheet)]
