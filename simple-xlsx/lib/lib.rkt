@@ -259,23 +259,20 @@
 
 (define (combine-hash-in-hash hash_list)
   (let ([result_map (make-hash)])
-    (let hash-loop ([loop_list hash_list])
-      (when (not (null? loop_list))
-            (let ([loop_hash (car loop_list)])
-              (hash-for-each
-               loop_hash
-               (lambda (key new_hash)
-                 (printf "~a,~a\n" key new_hash)
-                 (if (hash-has-key? result_map key)
-                     (let ([old_hash (hash-ref result_map key)])
-                       (hash-for-each
-                        new_hash
-                        (lambda (ik iv)
-                          (printf "~a,~a\n" ik iv)
-                          (hash-set! old_hash ik iv)))
-                       (hash-set! result_map key old_hash))
-                     (hash-set! result_map key new_hash)))))
-            (hash-loop (cdr loop_list))))
+    (let outer-hash-loop ([hashes hash_list])
+      (when (not (null? hashes))
+            (hash-for-each
+             (car hashes)
+             (lambda (cell_name style_hash)
+               (if (hash-has-key? result_map cell_name)
+                   (let ([old_hash (hash-copy (hash-ref result_map cell_name))])
+                     (hash-for-each
+                      style_hash
+                      (lambda (ik iv)
+                        (hash-set! old_hash ik iv)))
+                       (hash-set! result_map cell_name old_hash))
+                     (hash-set! result_map cell_name style_hash))))
+            (outer-hash-loop (cdr hashes))))
     result_map))
 
 (define (prefix-each-line str prefix)

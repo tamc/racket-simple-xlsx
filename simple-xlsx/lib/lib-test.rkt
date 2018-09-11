@@ -142,21 +142,26 @@
 
     (let* ([range1_hash (range-to-cell-hash "A1-C3" (make-hash '((a . 1))))]
            [range2_hash (range-to-cell-hash "A3-B4" (make-hash '((a . 2) (b . 1))))]
-           [result_map (combine-hash-in-hash (list range1_hash range2_hash))])
+           [range3_hash (range-to-cell-hash "B3-D5" (make-hash '((c . 3))))]
+           [result_map (combine-hash-in-hash (list range1_hash range2_hash range3_hash))])
       
       (check-equal? (hash-count range1_hash) 9)
       (check-equal? (hash-count range2_hash) 4)
-      (check-equal? (hash-count result_map) 11)
+      (check-equal? (hash-count range3_hash) 9)
+      (check-equal? (hash-count result_map) 17)
       
-      (check-equal? (hash-ref range1_hash "A1") '#hash((a . 1)))
-      (check-equal? (hash-ref range1_hash "C2") '#hash((a . 1)))
-      (check-equal? (hash-ref range1_hash "C3") '#hash((a . 1)))
+      (check-equal? (hash-ref result_map "A1") (make-hash '((a . 1))))
+      (check-equal? (hash-ref result_map "C2") (make-hash '((a . 1))))
 
-      (check-equal? (hash-ref range1_hash "A4") '#hash((a . 2) (b . 1)))
-      (check-equal? (hash-ref range1_hash "B4") '#hash((a . 2) (b . 1)))
+      (check-equal? (hash-ref result_map "A3") (make-hash '((a . 2) (b . 1))))
+      (check-equal? (hash-ref result_map "A4") (make-hash '((a . 2) (b . 1))))
 
-      (check-equal? (hash-ref range1_hash "A3") '#hash((a . 1) (b . 1)))
-      (check-equal? (hash-ref range1_hash "B3") '#hash((a . 1) (b . 1)))
+
+      (check-equal? (hash-ref result_map "B3") (make-hash '((a . 2) (b . 1) (c . 3))))
+      (check-equal? (hash-ref result_map "B4") (make-hash '((a . 2) (b . 1) (c . 3))))
+      (check-equal? (hash-ref result_map "C3") (make-hash '((a . 1) (c . 3))))
+      (check-equal? (hash-ref result_map "D5") (make-hash '((c . 3))))
+
     ))
 
    (test-case
