@@ -25,9 +25,8 @@
           [create-sheet-name-list (-> exact-nonnegative-integer? list?)]
           [get-dimension (-> list? string?)]
           [zip-xlsx (-> path-string? path-string? void?)]
-          [range-hash-ref (-> hash? string? any/c)]
           [range-to-cell-hash (-> string? any/c hash?)]
-          [combine-hash (-> (listof hash?) hash?)]
+          [combine-hash-in-hash (-> (listof hash?) hash?)]
           [check-lines? (-> input-port? input-port? void?)]
           [prefix-each-line (-> string? string? string?)]
           ))
@@ -235,26 +234,6 @@
               (zip (build-path 'up zip_file) "[Content_Types].xml" "_rels" "docProps" "xl")))
         (lambda () (current-directory pwd)))))
 
-(define (range-hash-ref range_hash cell_dimension)
-  (let* ([cell_items (regexp-match #rx"^([A-Z]+)([0-9]+)$" cell_dimension)]
-         [cell_col_index (abc->number (list-ref cell_items 1))]
-         [cell_row_index (string->number (list-ref cell_items 2))])
-    (let loop ([loop_list (hash->list range_hash)])
-      (if (not (null? loop_list))
-          (let* ([range_items (regexp-match #rx"^([A-Z]+)([0-9]+)-([A-Z]+)([0-9]+)$" (car (car loop_list)))]
-                 [start_col_index (abc->number (list-ref range_items 1))]
-                 [start_row_index (string->number (list-ref range_items 2))]
-                 [end_col_index (abc->number (list-ref range_items 3))]
-                 [end_row_index (string->number (list-ref range_items 4))])
-            (if (and
-                 (>= cell_col_index start_col_index)
-                 (>= cell_row_index start_row_index)
-                 (<= cell_col_index end_col_index)
-                 (<= cell_row_index end_row_index))
-                (cdr (car loop_list))
-                (loop (cdr loop_list))))
-          #f))))
-
 (define (range-to-cell-hash range_str val)
   (let ([flat_map (make-hash)])
     (when (regexp-match #rx"^([A-Z]+)([0-9]+)-([A-Z]+)([0-9]+)$" range_str)
@@ -278,8 +257,26 @@
                       (range-loop start_col_index (add1 loop_row_index))])))))
     flat_map))
 
-(define (combine-hash hash_list)
-  (car hash_list))
+(define (combine-hash-in-hash hash_list)
+  (let ([result_map (make-hash)])
+    (let hash-loop ([loop_list hash_list])
+      (when (not (null? loop_list))
+            (let ([loop_hash (car loop_list)])
+              (hash-for-each
+               loop_hash
+               (lambda (key new_hash)
+                 (printf "~a,~a\n" key new_hash)
+                 (if (hash-has-key? result_map key)
+                     (let ([old_hash (hash-ref result_map key)])
+                       (hash-for-each
+                        new_hash
+                        (lambda (ik iv)
+                          (printf "~a,~a\n" ik iv)
+                          (hash-set! old_hash ik iv)))
+                       (hash-set! result_map key old_hash))
+                     (hash-set! result_map key new_hash)))))
+            (hash-loop (cdr loop_list))))
+    result_map))
 
 (define (prefix-each-line str prefix)
   (with-output-to-string

@@ -184,9 +184,9 @@
                    
                    (set! new_cell_style_code_hash (range-to-cell-hash cell_range (equal-hash-code style_hash)))
 
-                   (let loop ([loop_list (hash-keys cell_to_style_code_hash)])
+                   (let loop ([loop_list (hash-keys new_cell_to_style_code_hash)])
                      (when (not (null? loop_list))
-                           (when (hash-has-key? new_cell_style_code_hash (car loop_list))
+                           (when (hash-has-key? cell_style_code_hash (car loop_list))
                                  (let ([old_style_map 
                                         (hash-ref style_code_to_style_hash 
                                                   (hash-ref cell_to_style_code_hash (car loop_list)))])

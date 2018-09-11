@@ -109,50 +109,55 @@
     )
    
    (test-case
-    "test-range-to-cell-hash and combine-hash"
-    
-    (let* ([range1_hash (range-to-cell-hash "A1-A2" 1)]
-           [range2_hash (range-to-cell-hash "A3-B4" 1)]
-           [range3_hash (range-to-cell-hash "C1-AA10" 3)]
-           [range_hash (combine-hash range1_hash range2_hash range3_hash)])
-      
-      (check-equal? (range-hash-ref range_hash "A1") 1)
-      (check-equal? (range-hash-ref range_hash "A2") 1)
-
-      (check-equal? (range-hash-ref range_hash "A3") 2)
-      (check-equal? (range-hash-ref range_hash "B3") 2)
-
-      (check-equal? (range-hash-ref range_hash "C8") 3)
-      (check-equal? (range-hash-ref range_hash "Z10") 3)
-      (check-equal? (range-hash-ref range_hash "AA10") 3)
-      ))
-
-   (test-case
     "test-range-to-cell-hash"
     
     (let* ([range1_hash (range-to-cell-hash "A1-A2" 1)]
-           [range2_hash (range-to-cell-hash "A3-B4" 2)]
-           [flat_range_hash (combine-hash (list range1_hash range2_hash))])
+           [range2_hash (range-to-cell-hash "A3-B4" 2)])
+
+      (check-equal? (hash-count range1_hash) 2)
+      (check-equal? (hash-count range2_hash) 4)
       
-      (check-equal? (hash-count flat_range_hash) 6)
-      (check-equal? (hash-ref flat_range_hash "A1") 1)
-      (check-equal? (hash-ref flat_range_hash "A2") 1)
-      (check-equal? (hash-ref flat_range_hash "A3") 2)
-      (check-equal? (hash-ref flat_range_hash "A4") 2)
-      (check-equal? (hash-ref flat_range_hash "B3") 2)
-      (check-equal? (hash-ref flat_range_hash "B4") 2))
+      (check-equal? (hash-ref range1_hash "A1") 1)
+      (check-equal? (hash-ref range1_hash "A2") 1)
+      (check-equal? (hash-ref range2_hash "A3") 2)
+      (check-equal? (hash-ref range2_hash "A4") 2)
+      (check-equal? (hash-ref range2_hash "B3") 2)
+      (check-equal? (hash-ref range2_hash "B4") 2))
 
     (let* ([range1_hash (range-to-cell-hash "A2-A1" 1)]
-           [range2_hash (range-to-cell-hash "A5-E14" 2)]
-           [flat_range_hash (combine-hash (list range1_hash range2_hash))])
+           [range2_hash (range-to-cell-hash "A5-E14" 2)])
       
-      (check-equal? (hash-count flat_range_hash) 50)
-      (check-equal? (hash-ref flat_range_hash "A5") 2)
-      (check-equal? (hash-ref flat_range_hash "B10") 2)
-      (check-equal? (hash-ref flat_range_hash "E14") 2)
+      (check-equal? (hash-count range1_hash) 0)
+      (check-equal? (hash-count range2_hash) 50)
+
+      (check-equal? (hash-ref range2_hash "A5") 2)
+      (check-equal? (hash-ref range2_hash "B10") 2)
+      (check-equal? (hash-ref range2_hash "E14") 2)
       )
-      
+
     )
+
+   (test-case
+    "test-combine-hash-in-hash"
+
+    (let* ([range1_hash (range-to-cell-hash "A1-C3" (make-hash '((a . 1))))]
+           [range2_hash (range-to-cell-hash "A3-B4" (make-hash '((a . 2) (b . 1))))]
+           [result_map (combine-hash-in-hash (list range1_hash range2_hash))])
+      
+      (check-equal? (hash-count range1_hash) 9)
+      (check-equal? (hash-count range2_hash) 4)
+      (check-equal? (hash-count result_map) 11)
+      
+      (check-equal? (hash-ref range1_hash "A1") '#hash((a . 1)))
+      (check-equal? (hash-ref range1_hash "C2") '#hash((a . 1)))
+      (check-equal? (hash-ref range1_hash "C3") '#hash((a . 1)))
+
+      (check-equal? (hash-ref range1_hash "A4") '#hash((a . 2) (b . 1)))
+      (check-equal? (hash-ref range1_hash "B4") '#hash((a . 2) (b . 1)))
+
+      (check-equal? (hash-ref range1_hash "A3") '#hash((a . 1) (b . 1)))
+      (check-equal? (hash-ref range1_hash "B3") '#hash((a . 1) (b . 1)))
+    ))
 
    (test-case
     "test-prefix-each-line"
