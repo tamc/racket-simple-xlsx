@@ -20,26 +20,17 @@
       (let* ([sheet (sheet-content (send xlsx get-sheet-by-name "测试1"))])
 
         (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "A1-A4" #:style '( (backgroundColor . "red") ))
-        (let* ([cell_to_style_code_hash (data-sheet-cell_to_style_code_hash sheet)]
-               [style_code_to_style_hash (data-sheet-style_code_to_style_hash sheet)])
-
-          (check-equal? (hash-count cell_to_style_code_hash) 4)
-          (check-equal? (hash-count style_code_to_style_hash) 1))
+        (let* ([cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)])
+          (check-equal? (hash-count cell_to_origin_style_hash) 4))
 
         (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "B1-B4" #:style '( (backgroundColor . "blue") ))
-        (let* ([cell_to_style_code_hash (data-sheet-cell_to_style_code_hash sheet)]
-               [style_code_to_style_hash (data-sheet-style_code_to_style_hash sheet)])
-
-          (check-equal? (hash-count cell_to_style_code_hash) 8)
-          (check-equal? (hash-count style_code_to_style_hash) 2))
+        (let* ([cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)])
+          (check-equal? (hash-count cell_to_origin_style_hash) 8))
 
         (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "C1-C4" #:style '( (backgroundColor . "red") ))
-        (let* ([cell_to_style_code_hash (data-sheet-cell_to_style_code_hash sheet)]
-               [style_code_to_style_hash (data-sheet-style_code_to_style_hash sheet)])
-
-          (check-equal? (hash-count cell_to_style_code_hash) 12)
-          (check-equal? (hash-count style_code_to_style_hash) 2))
-
+        (let* ([cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)])
+          (check-equal? (hash-count cell_to_origin_style_hash) 12))
+        
         (send xlsx write-data-sheet-style! #:sheet_name "测试1")
 
         (let* ([xlsx_style (get-field style xlsx)]

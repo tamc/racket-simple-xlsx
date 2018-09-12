@@ -13,8 +13,7 @@
                   (
                    (rows list?)
                    (width_hash hash?)
-                   (cell_to_style_code_hash hash?)
-                   (style_code_to_style_hash hash?)
+                   (cell_to_origin_style_hash hash?)
                    (cell_to_style_index_hash hash?)
                    )]
           [struct chart-sheet
@@ -42,8 +41,7 @@
 (struct data-sheet (
                     [rows #:mutable] 
                     [width_hash #:mutable]
-                    [cell_to_style_code_hash #:mutable]
-                    [style_code_to_style_hash #:mutable]
+                    [cell_to_origin_style_hash #:mutable]
                     [cell_to_style_index_hash #:mutable]
                     ))
 

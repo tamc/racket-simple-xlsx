@@ -266,6 +266,7 @@
              (lambda (cell_name style_hash)
                (if (hash-has-key? result_map cell_name)
                    (let ([old_hash (hash-copy (hash-ref result_map cell_name))])
+
                      (hash-for-each
                       style_hash
                       (lambda (ik iv)

@@ -59,7 +59,7 @@
                                         seq
                                         'data
                                         type_seq
-                                        (data-sheet sheet_data (make-hash) (make-hash) (make-hash) (make-hash)))))
+                                        (data-sheet sheet_data (make-hash) (make-hash) (make-hash)))))
                        (hash-set! sheet_name_map sheet_name (sub1 seq)))
                      (error (format "duplicate sheet name[~a]" sheet_name)))))
          
@@ -162,10 +162,8 @@
          (define/public (add-data-sheet-cell-style! #:sheet_name sheet_name #:cell_range cell_range #:style style_pair_list)
            (when (check-cell-range cell_range)
                  (let* ([sheet (sheet-content (get-sheet-by-name sheet_name))]
-                        [cell_to_style_code_hash (data-sheet-cell_to_style_code_hash sheet)]
-                        [style_code_to_style_hash (data-sheet-style_code_to_style_hash sheet)]
-                        [style_hash (make-hash)]
-                        [style_code #f])
+                        [cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)]
+                        [style_hash (make-hash)])
 
                    (for-each
                     (lambda (style_pair)
@@ -182,26 +180,20 @@
                              )))
                     style_pair_list)
                    
-                   (set! style_code (equal-hash-code style_hash))
-                   
-                   (when (not (hash-has-key? style_code_to_style_hash style_code))
-                         (hash-set! style_code_to_style_hash style_code style_hash))
-                   
-                   (set-data-sheet-cell_to_style_code_hash! 
-                    (sheet-content (get-sheet-by-name sheet_name)) 
-                    (combine-hash-in-hash (list cell_to_style_code_hash (range-to-cell-hash cell_range style_code)))))))
+                   (set-data-sheet-cell_to_origin_style_hash! 
+                    (sheet-content (get-sheet-by-name sheet_name))
+                    (combine-hash-in-hash (list cell_to_origin_style_hash (range-to-cell-hash cell_range style_hash)))))))
 
          (define/public (write-data-sheet-style! #:sheet_name sheet_name)
            (let* ([sheet (sheet-content (get-sheet-by-name sheet_name))]
-                  [cell_to_style_code_hash (data-sheet-cell_to_style_code_hash sheet)]
-                  [style_code_to_style_hash (data-sheet-style_code_to_style_hash sheet)]
-                  [style_code_to_style_index_hash (make-hash)]
-                  [cell_to_style_index_hash (data-sheet-cell_to_style_index_hash sheet)])
+                  [cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)]
+                  [cell_to_style_index_hash (data-sheet-cell_to_style_index_hash sheet)]
+                  [style_code_to_style_index_hash (make-hash)])
 
-             (let loop ([loop_list (hash->list style_code_to_style_hash)])
+             (let loop ([loop_list (hash->list cell_to_origin_style_hash)])
                (when (not (null? loop_list))
-                     (let ([style_code (caar loop_list)]
-                           [loop_style_hash (cdar loop_list)]
+                     (let ([cell (caar loop_list)]
+                           [origin_style_hash (cdar loop_list)]
                            [style_list (xlsx-style-style_list style)]
                            [style_hash (make-hash)]
                            [style_hash_code #f]
@@ -216,7 +208,7 @@
                            )
 
                        (hash-for-each
-                        loop_style_hash
+                        origin_style_hash
                         (lambda (key value)
                           (cond
                            [(or
@@ -256,15 +248,10 @@
                                  (begin
                                    (hash-set! style_code_to_style_index_hash style_hash_code (add1 (length style_list)))
                                    (set-xlsx-style-style_list! style `(,@style_list ,style_hash))
-                                   (hash-set! style_code_to_style_index_hash style_code (add1 (length style_list))))
-                                 (hash-set! style_code_to_style_index_hash style_code (hash-ref style_code_to_style_index_hash style_hash_code))))
+                                   (hash-set! cell_to_style_index_hash cell (add1 (length style_list))))
+                                 (hash-set! cell_to_style_index_hash cell (hash-ref style_code_to_style_index_hash style_hash_code))))
                        )
                      (loop (cdr loop_list))))
-             
-             (hash-for-each
-              cell_to_style_code_hash
-              (lambda (cell style_code)
-                (hash-set! cell_to_style_index_hash cell (hash-ref style_code_to_style_index_hash style_code))))
            ))
 
          (define/public (get-cell-to-style-index-map sheet_name)

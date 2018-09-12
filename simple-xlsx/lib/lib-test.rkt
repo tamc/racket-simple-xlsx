@@ -156,7 +156,6 @@
       (check-equal? (hash-ref result_map "A3") (make-hash '((a . 2) (b . 1))))
       (check-equal? (hash-ref result_map "A4") (make-hash '((a . 2) (b . 1))))
 
-
       (check-equal? (hash-ref result_map "B3") (make-hash '((a . 2) (b . 1) (c . 3))))
       (check-equal? (hash-ref result_map "B4") (make-hash '((a . 2) (b . 1) (c . 3))))
       (check-equal? (hash-ref result_map "C3") (make-hash '((a . 1) (c . 3))))
