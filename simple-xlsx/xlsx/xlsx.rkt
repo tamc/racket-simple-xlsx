@@ -59,7 +59,7 @@
                                         seq
                                         'data
                                         type_seq
-                                        (data-sheet sheet_data (make-hash) (make-hash) (make-hash) (make-hash) (make-hash)))))
+                                        (data-sheet sheet_data (make-hash) (make-hash) (make-hash) (make-hash)))))
                        (hash-set! sheet_name_map sheet_name (sub1 seq)))
                      (error (format "duplicate sheet name[~a]" sheet_name)))))
          
@@ -195,13 +195,13 @@
            (let* ([sheet (sheet-content (get-sheet-by-name sheet_name))]
                   [cell_to_style_code_hash (data-sheet-cell_to_style_code_hash sheet)]
                   [style_code_to_style_hash (data-sheet-style_code_to_style_hash sheet)]
-                  [style_code_to_style_index_hash (data-sheet-style_code_to_style_index_hash sheet)]
+                  [style_code_to_style_index_hash (make-hash)]
                   [cell_to_style_index_hash (data-sheet-cell_to_style_index_hash sheet)])
 
              (let loop ([loop_list (hash->list style_code_to_style_hash)])
                (when (not (null? loop_list))
                      (let ([style_code (caar loop_list)]
-                           [style (cdar loop_list)] 
+                           [loop_style_hash (cdar loop_list)]
                            [style_list (xlsx-style-style_list style)]
                            [style_hash (make-hash)]
                            [style_hash_code #f]
@@ -216,13 +216,13 @@
                            )
 
                        (hash-for-each
-                        style
+                        loop_style_hash
                         (lambda (key value)
                           (cond
                            [(or
                              (eq? key 'backgroundColor)
                              )
-                            (hash-set! fill_hash key value)]
+                            (hash-set! fill_hash 'fgColor value)]
                            [(or
                              (eq? key 'fontSize)
                              )
