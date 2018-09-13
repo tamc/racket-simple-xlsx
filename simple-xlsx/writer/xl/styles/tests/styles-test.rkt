@@ -26,9 +26,9 @@
            ]
           [fill_list 
            (list 
-            #hash((backgroundColor . "FF0000")) 
-            #hash((backgroundColor . "00FF00")) 
-            #hash((backgroundColor . "0000FF")))]
+            #hash((fgColor . "FF0000")) 
+            #hash((fgColor . "00FF00")) 
+            #hash((fgColor . "0000FF")))]
           [font_list 
            (list 
             #hash((fontSize . 20)) 

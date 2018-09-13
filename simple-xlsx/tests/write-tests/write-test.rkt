@@ -23,13 +23,13 @@
                   #:sheet_data '(("month/brand" "201601" "201602" "201603" "201604")
                                  ("CAT" 100 300 200 6.9)
                                  ("Puma" 200 400 300 13.89)
-                                 ("死肥宅" 300 500 400 23.34)
+                                 ("Asics" 300 500 400 23.34)
                                  ))
             (send xlsx set-data-sheet-col-width! #:sheet_name "DataSheet" #:col_range "A-B" #:width 50)
 
-            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B2-B3" #:style '( (backgroundColor . "FF0000") ))
+            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "A2-B3" #:style '( (backgroundColor . "00C851") ))
 
-            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "C3-D4" #:style '( (backgroundColor . "0000FF") ))
+            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "C3-D4" #:style '( (backgroundColor . "AA66CC") ))
 
             (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B3-C4" #:style '( (fontSize . 20) ))
 
