@@ -19,7 +19,7 @@
 
       (let* ([sheet (sheet-content (send xlsx get-sheet-by-name "测试1"))])
 
-        (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "A1-A4" #:style '( (backgroundColor . "red") ))
+        (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "A1-A4" #:style '( (backgroundColor . "FF0000") ))
         (let* ([cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)])
           (check-equal? (hash-count cell_to_origin_style_hash) 4))
 
@@ -27,11 +27,11 @@
         (let* ([cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)])
           (check-equal? (hash-count cell_to_origin_style_hash) 8))
 
-        (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "C1-C4" #:style '( (backgroundColor . "red") ))
+        (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "C1-C4" #:style '( (backgroundColor . "FF0000") ))
         (let* ([cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)])
           (check-equal? (hash-count cell_to_origin_style_hash) 12))
         
-        (send xlsx write-data-sheet-style! #:sheet_name "测试1")
+        (send xlsx burn-styles!)
 
         (let* ([xlsx_style (get-field style xlsx)]
                [cell_to_style_index_hash (data-sheet-cell_to_style_index_hash sheet)]
@@ -54,7 +54,7 @@
           (check-equal? (hash-ref cell_to_style_index_hash "C1") 1)
           (check-equal? (hash-ref cell_to_style_index_hash "C2") 1)
 
-          (check-equal? (list-ref fill_list (sub1 (hash-ref style1 'fill))) (make-hash '((fgColor . "red"))))
+          (check-equal? (list-ref fill_list (sub1 (hash-ref style1 'fill))) (make-hash '((fgColor . "FF0000"))))
           (check-equal? (list-ref fill_list (sub1 (hash-ref style2 'fill))) (make-hash '((fgColor . "blue"))))
           )
 

@@ -27,7 +27,7 @@
         (let* ([cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)])
           (check-equal? (hash-count cell_to_origin_style_hash) 19))
 
-        (send xlsx write-data-sheet-style! #:sheet_name "测试1")
+        (send xlsx burn-styles!)
 
         (let* ([xlsx_style (get-field style xlsx)]
                [cell_to_style_index_hash (data-sheet-cell_to_style_index_hash sheet)]

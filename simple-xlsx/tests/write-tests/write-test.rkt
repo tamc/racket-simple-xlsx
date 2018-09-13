@@ -23,15 +23,15 @@
                   #:sheet_data '(("month/brand" "201601" "201602" "201603" "201604")
                                  ("CAT" 100 300 200 6.9)
                                  ("Puma" 200 400 300 13.89)
-                                 ("Brooks" 300 500 400 23.34)
+                                 ("死肥宅" 300 500 400 23.34)
                                  ))
             (send xlsx set-data-sheet-col-width! #:sheet_name "DataSheet" #:col_range "A-B" #:width 50)
 
-            (send xlsx set-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B2-C3" #:style '( (backgroundColor . "FF0000") ))
+            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B2-B3" #:style '( (backgroundColor . "FF0000") ))
 
-            (send xlsx set-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "C4-D4" #:style '( (backgroundColor . "0000FF") ))
+            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "C3-D4" #:style '( (backgroundColor . "0000FF") ))
 
-            (send xlsx set-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B2-B3" #:style '( (fontSize . 20) ))
+            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B3-C4" #:style '( (fontSize . 20) ))
 
             (send xlsx add-chart-sheet #:sheet_name "LineChart1" #:topic "Horizontal Data" #:x_topic "Kg")
             (send xlsx set-chart-x-data! #:sheet_name "LineChart1" #:data_sheet_name "DataSheet" #:data_range "B1-D1")

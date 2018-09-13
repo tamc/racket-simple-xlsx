@@ -16,7 +16,12 @@
    (test-case
     "test-cellXfs"
     
-    (let ([style_list (list #hash((fill . 1)) #hash((fill . 2)) #hash((fill . 3)))])
+    (let ([style_list 
+           (list 
+            #hash((fill . 1)) 
+            #hash((fill . 2) (font . 1)) 
+            #hash((font . 2))
+            )])
       
       (call-with-input-file test_file
         (lambda (expected)

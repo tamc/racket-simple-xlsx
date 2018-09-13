@@ -57,6 +57,7 @@
           (write-shared-strings-file (build-path tmp_dir "xl") xlsx)
 
           ;; styles
+          (send xlsx burn-styles!)
           (write-styles-file (build-path tmp_dir "xl") (send xlsx get-style-list) (send xlsx get-fill-list) (send xlsx get-font-list))
 
           ;; workbook

@@ -63,7 +63,7 @@
 @|(let loop ([loop_list fill_list]
              [result_str ""])
     (if (not (null? loop_list))
-      (let ([backgroundColor (hash-ref (car loop_list) 'backgroundColor "FFFFFF")])
+      (let ([backgroundColor (hash-ref (car loop_list) 'fgColor "FFFFFF")])
         (loop 
           (cdr loop_list)
           (string-append result_str (format "  <fill><patternFill patternType=\"solid\"><fgColor rgb=\"~a\"/><bgColor indexed=\"64\"/></patternFill></fill>\n" backgroundColor))))
@@ -85,15 +85,17 @@
 (define (write-cellXfs style_list) @S{
 <cellXfs count="@|(number->string (add1 (length style_list)))|">
   <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"><alignment vertical="center"/></xf>
-@|(let loop ([loop_list style_list]
-             [result_str ""])
-    (if (not (null? loop_list))
-      (let ([fill (hash-ref (car loop_list) 'fill 0)]
-            [font (hash-ref (car loop_list) 'font 0)])
-        (loop
-          (cdr loop_list)
-          (string-append result_str (format "  <xf numFmtId=\"0\" fontId=\"~a\" fillId=\"~a\" borderId=\"0\" xfId=\"0\"><alignment vertical=\"center\"/></xf>\n" font fill))))
-        result_str))|</cellXfs>
+@|(with-output-to-string
+    (lambda ()
+      (let loop ([loop_list style_list])
+        (when (not (null? loop_list))
+          (let ([fill (hash-ref (car loop_list) 'fill 0)]
+                [font (hash-ref (car loop_list) 'font 0)])
+            (printf "  <xf numFmtId=\"0\" fontId=\"~a\" fillId=\"~a\" borderId=\"0\" xfId=\"0\"" font fill)
+            (when (not (= font 0)) (printf " applyFont=\"1\""))
+            (when (not (= fill 0)) (printf " applyFill=\"1\""))
+            (printf "><alignment vertical=\"center\"/></xf>\n"))
+          (loop (cdr loop_list))))))|</cellXfs>
 })
 
 (define (write-cellStyles) @S{
