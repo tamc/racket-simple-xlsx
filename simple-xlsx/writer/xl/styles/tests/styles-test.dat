@@ -23,7 +23,7 @@
 
     <font>
       <sz val="30"/>
-      <color theme="1"/>
+      <color rgb="red"/>
       <name val="宋体"/>
       <family val="2"/>
       <charset val="134"/>

@@ -45,10 +45,11 @@
       (let loop ([loop_list font_list])
         (when (not (null? loop_list))
           (printf "\n")
-          (let ([fontSize (hash-ref (car loop_list) 'fontSize 11)])
+          (let ([fontSize (hash-ref (car loop_list) 'fontSize 11)]
+                [fontColor (hash-ref (car loop_list) 'fontColor #f)])
             (printf "  <font>\n")
             (printf "    <sz val=\"~a\"/>\n" fontSize)
-            (printf "    <color theme=\"1\"/>\n")
+            (if fontColor (printf "    <color rgb=\"~a\"/>\n" fontColor) (printf "    <color theme=\"1\"/>\n"))
             (printf "    <name val=\"宋体\"/>\n")
             (printf "    <family val=\"2\"/>\n")
             (printf "    <charset val=\"134\"/>\n")

@@ -19,8 +19,8 @@
     (let ([font_list 
            (list 
             #hash((fontSize . 20)) 
-            #hash((fontSize . 30))
-            #hash((fontSize . 40))
+            #hash((fontSize . 30) (fontColor . "FF0000"))
+            #hash((fontSize . 40) (fontColor . "0000FF"))
             )])
       
       (call-with-input-file test_file

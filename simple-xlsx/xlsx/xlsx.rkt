@@ -174,6 +174,7 @@
                              [(or
                                (eq? (car style_pair) 'backgroundColor)
                                (eq? (car style_pair) 'fontSize)
+                               (eq? (car style_pair) 'fontColor)
                                )
                               (hash-set! style_hash (car style_pair) (cdr style_pair))
                               ]
@@ -221,6 +222,7 @@
                                     (hash-set! fill_hash 'fgColor value)]
                                    [(or
                                      (eq? key 'fontSize)
+                                     (eq? key 'fontColor)
                                      )
                                     (hash-set! font_hash key value)]
                                    )))

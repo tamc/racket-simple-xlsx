@@ -19,7 +19,7 @@
 
   <font>
     <sz val="30"/>
-    <color theme="1"/>
+    <color rgb="FF0000"/>
     <name val="宋体"/>
     <family val="2"/>
     <charset val="134"/>
@@ -28,7 +28,7 @@
 
   <font>
     <sz val="40"/>
-    <color theme="1"/>
+    <color rgb="0000FF"/>
     <name val="宋体"/>
     <family val="2"/>
     <charset val="134"/>

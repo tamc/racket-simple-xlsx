@@ -31,7 +31,9 @@
 
             (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "C3-D4" #:style '( (backgroundColor . "AA66CC") ))
 
-            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B3-C4" #:style '( (fontSize . 20) ))
+            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B3-C4" #:style '( (fontSize . 20)))
+
+            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B1-C3" #:style '( (fontColor . "FF8800") ))
 
             (send xlsx add-chart-sheet #:sheet_name "LineChart1" #:topic "Horizontal Data" #:x_topic "Kg")
             (send xlsx set-chart-x-data! #:sheet_name "LineChart1" #:data_sheet_name "DataSheet" #:data_range "B1-D1")

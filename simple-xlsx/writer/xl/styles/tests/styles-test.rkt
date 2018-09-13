@@ -32,7 +32,7 @@
           [font_list 
            (list 
             #hash((fontSize . 20)) 
-            #hash((fontSize . 30))
+            #hash((fontSize . 30) (fontColor . "red"))
             #hash((fontSize . 40))
             )])
 
