@@ -46,21 +46,24 @@
         (when (not (null? loop_list))
           (printf "\n")
           (let ([fontSize (hash-ref (car loop_list) 'fontSize 11)]
-                [fontColor (hash-ref (car loop_list) 'fontColor #f)])
+                [fontColor (hash-ref (car loop_list) 'fontColor #f)]
+                [fontName (hash-ref (car loop_list) 'fontName "宋体")])
             (printf "  <font>\n")
             (printf "    <sz val=\"~a\"/>\n" fontSize)
             (if fontColor (printf "    <color rgb=\"~a\"/>\n" fontColor) (printf "    <color theme=\"1\"/>\n"))
-            (printf "    <name val=\"宋体\"/>\n")
+            (printf "    <name val=\"~a\"/>\n" fontName)
             (printf "    <family val=\"2\"/>\n")
-            (printf "    <charset val=\"134\"/>\n")
-            (printf "    <scheme val=\"minor\"/>\n")
+            (when (not (regexp-match #rx"^([a-zA-Z]| |-|_|[0-9])+$" fontName)) 
+              (printf "    <charset val=\"134\"/>\n")
+              (printf "    <scheme val=\"minor\"/>\n"))
             (printf "  </font>\n")
             (loop (cdr loop_list)))))))|</fonts>
 })
 
 (define (write-fills fill_list) @S{
-<fills count="@|(number->string (add1 (length fill_list)))|">
+<fills count="@|(number->string (+ 2 (length fill_list)))|">
   <fill><patternFill patternType="none"/></fill>
+  <fill><patternFill patternType="gray125"/></fill>
 @|(let loop ([loop_list fill_list]
              [result_str ""])
     (if (not (null? loop_list))

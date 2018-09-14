@@ -43,17 +43,17 @@
 
           (check-equal? (hash-count (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "A1")))) 1)
           (check-equal? 
-           (list-ref fill_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "A1"))) 'fill)))
+           (list-ref fill_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "A1"))) 'fill) 2))
            (make-hash '((fgColor . "red"))))
 
           (check-equal? (hash-count (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "B2")))) 1)
           (check-equal? 
-           (list-ref fill_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "B2"))) 'fill)))
+           (list-ref fill_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "B2"))) 'fill) 2))
            (make-hash '((fgColor . "blue"))))
 
           (check-equal? (hash-count (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C3")))) 2)
           (check-equal? 
-           (list-ref fill_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C3"))) 'fill)))
+           (list-ref fill_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C3"))) 'fill) 2))
            (make-hash '((fgColor . "blue"))))
           (check-equal? 
            (list-ref font_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C3"))) 'font)))

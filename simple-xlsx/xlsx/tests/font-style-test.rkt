@@ -19,7 +19,7 @@
 
       (let* ([sheet (sheet-content (send xlsx get-sheet-by-name "测试1"))])
 
-        (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "A1-A4" #:style '( (fontColor . "red") (fontSize . 10) ))
+        (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "A1-A4" #:style '( (fontColor . "red") (fontSize . 10)))
         (let* ([cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)])
           (check-equal? (hash-count cell_to_origin_style_hash) 4))
 
@@ -30,6 +30,10 @@
         (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "C1-C4" #:style '( (fontSize . 10) (fontColor . "red")))
         (let* ([cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)])
           (check-equal? (hash-count cell_to_origin_style_hash) 12))
+
+        (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "C1-C2" #:style '( (fontSize . 10) (fontColor . "red") (fontName . "Impact")))
+        (let* ([cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)])
+          (check-equal? (hash-count cell_to_origin_style_hash) 12))
         
         (send xlsx burn-styles!)
 
@@ -38,24 +42,28 @@
                [style_list (xlsx-style-style_list xlsx_style)]
                [font_code_to_font_index_hash (xlsx-style-font_code_to_font_index_hash xlsx_style)]
                [font_list (xlsx-style-font_list xlsx_style)]
-               [style1 (list-ref style_list 0)]
-               [style2 (list-ref style_list 1)]
               )
 
           (check-equal? (hash-count cell_to_style_index_hash) 12)
-          (check-equal? (length style_list) 2)
-          (check-equal? (hash-count font_code_to_font_index_hash) 2)
-          (check-equal? (length font_list) 2)
+          (check-equal? (length style_list) 3)
+          (check-equal? (hash-count font_code_to_font_index_hash) 3)
+          (check-equal? (length font_list) 3)
           
-          (check-equal? (hash-ref cell_to_style_index_hash "A1") 1)
-          (check-equal? (hash-ref cell_to_style_index_hash "A4") 1)
-          (check-equal? (hash-ref cell_to_style_index_hash "B1") 2)
-          (check-equal? (hash-ref cell_to_style_index_hash "B4") 2)
-          (check-equal? (hash-ref cell_to_style_index_hash "C1") 1)
-          (check-equal? (hash-ref cell_to_style_index_hash "C2") 1)
+          (check-equal? 
+           (list-ref font_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "A1"))) 'font)))
+           (make-hash '((fontSize . 10) (fontColor . "red"))))
 
-          (check-equal? (list-ref font_list (sub1 (hash-ref style1 'font))) (make-hash '((fontSize . 10) (fontColor . "red"))))
-          (check-equal? (list-ref font_list (sub1 (hash-ref style2 'font))) (make-hash '((fontSize . 20) (fontColor . "00FF00"))))
+          (check-equal? 
+           (list-ref font_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C3"))) 'font)))
+           (make-hash '((fontSize . 10) (fontColor . "red"))))
+
+          (check-equal? 
+           (list-ref font_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "B1"))) 'font)))
+           (make-hash '((fontSize . 20) (fontColor . "00FF00"))))
+
+          (check-equal? 
+           (list-ref font_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C1"))) 'font)))
+           (make-hash '((fontSize . 10) (fontColor . "red") (fontName . "Impact"))))
           )
 
         )))))

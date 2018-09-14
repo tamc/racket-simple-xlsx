@@ -175,6 +175,7 @@
                                (eq? (car style_pair) 'backgroundColor)
                                (eq? (car style_pair) 'fontSize)
                                (eq? (car style_pair) 'fontColor)
+                               (eq? (car style_pair) 'fontName)
                                )
                               (hash-set! style_hash (car style_pair) (cdr style_pair))
                               ]
@@ -223,6 +224,7 @@
                                    [(or
                                      (eq? key 'fontSize)
                                      (eq? key 'fontColor)
+                                     (eq? key 'fontName)
                                      )
                                     (hash-set! font_hash key value)]
                                    )))
@@ -232,9 +234,9 @@
 
                                      (if (not (hash-has-key? fill_code_to_fill_index_hash fill_hash_code))
                                          (begin
-                                           (hash-set! fill_code_to_fill_index_hash fill_hash_code (add1 (length fill_list)))
+                                           (hash-set! fill_code_to_fill_index_hash fill_hash_code (+ 2 (length fill_list)))
                                            (set-xlsx-style-fill_list! style `(,@fill_list ,fill_hash))
-                                           (hash-set! style_hash 'fill (add1 (length fill_list))))
+                                           (hash-set! style_hash 'fill (+ 2 (length fill_list))))
                                          (hash-set! style_hash 'fill (hash-ref fill_code_to_fill_index_hash fill_hash_code))))
 
                                (when (> (hash-count font_hash) 0)

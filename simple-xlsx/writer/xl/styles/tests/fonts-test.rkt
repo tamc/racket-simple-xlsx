@@ -19,7 +19,7 @@
     (let ([font_list 
            (list 
             #hash((fontSize . 20)) 
-            #hash((fontSize . 30) (fontColor . "FF0000"))
+            #hash((fontSize . 30) (fontColor . "FF0000") (fontName . "Impact"))
             #hash((fontSize . 40) (fontColor . "0000FF"))
             )])
       

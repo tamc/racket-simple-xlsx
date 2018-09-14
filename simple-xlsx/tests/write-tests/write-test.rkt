@@ -31,7 +31,7 @@
 
             (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "C3-D4" #:style '( (backgroundColor . "AA66CC") ))
 
-            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B3-C4" #:style '( (fontSize . 20)))
+            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B3-C4" #:style '( (fontSize . 20) (fontName . "Impact")))
 
             (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B1-C3" #:style '( (fontColor . "FF8800") ))
 

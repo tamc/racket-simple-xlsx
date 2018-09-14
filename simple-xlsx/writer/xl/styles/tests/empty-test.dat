@@ -13,8 +13,9 @@
     </font>
   </fonts>
 
-  <fills count="1">
+  <fills count="2">
     <fill><patternFill patternType="none"/></fill>
+    <fill><patternFill patternType="gray125"/></fill>
   </fills>
 
   <borders count="1">

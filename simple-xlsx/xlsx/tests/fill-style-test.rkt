@@ -38,8 +38,6 @@
                [style_list (xlsx-style-style_list xlsx_style)]
                [fill_code_to_fill_index_hash (xlsx-style-fill_code_to_fill_index_hash xlsx_style)]
                [fill_list (xlsx-style-fill_list xlsx_style)]
-               [style1 (list-ref style_list 0)]
-               [style2 (list-ref style_list 1)]
               )
 
           (check-equal? (hash-count cell_to_style_index_hash) 12)
@@ -47,15 +45,17 @@
           (check-equal? (hash-count fill_code_to_fill_index_hash) 2)
           (check-equal? (length fill_list) 2)
           
-          (check-equal? (hash-ref cell_to_style_index_hash "A1") 1)
-          (check-equal? (hash-ref cell_to_style_index_hash "A4") 1)
-          (check-equal? (hash-ref cell_to_style_index_hash "B1") 2)
-          (check-equal? (hash-ref cell_to_style_index_hash "B4") 2)
-          (check-equal? (hash-ref cell_to_style_index_hash "C1") 1)
-          (check-equal? (hash-ref cell_to_style_index_hash "C2") 1)
+          (check-equal? 
+           (list-ref fill_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "A1"))) 'fill) 2))
+           (make-hash '((fgColor . "FF0000"))))
 
-          (check-equal? (list-ref fill_list (sub1 (hash-ref style1 'fill))) (make-hash '((fgColor . "FF0000"))))
-          (check-equal? (list-ref fill_list (sub1 (hash-ref style2 'fill))) (make-hash '((fgColor . "blue"))))
+          (check-equal? 
+           (list-ref fill_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "B1"))) 'fill) 2))
+           (make-hash '((fgColor . "blue"))))
+
+          (check-equal? 
+           (list-ref fill_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C1"))) 'fill) 2))
+           (make-hash '((fgColor . "FF0000"))))
           )
 
         (let ([style_map (send xlsx get-cell-to-style-index-map "测试1")])

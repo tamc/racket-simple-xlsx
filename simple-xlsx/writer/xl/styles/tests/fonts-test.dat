@@ -20,10 +20,8 @@
   <font>
     <sz val="30"/>
     <color rgb="FF0000"/>
-    <name val="宋体"/>
+    <name val="Impact"/>
     <family val="2"/>
-    <charset val="134"/>
-    <scheme val="minor"/>
   </font>
 
   <font>
