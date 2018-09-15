@@ -21,7 +21,7 @@
 
         (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "A1-B3" #:style '( (backgroundColor . "red") ))
         (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "B2-D3" #:style '( (backgroundColor . "blue") ))
-        (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "C3-E4" #:style '( (fontSize . 10) (fontColor . "33E5B5")))
+        (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "C3-E4" #:style '( (fontSize . 10) (fontColor . "33E5B5") (numberPrecision . 2)))
         (send xlsx add-data-sheet-cell-style! #:sheet_name "测试1" #:cell_range "E4-F6" #:style '( (fontSize . 5) ))
 
         (let* ([cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)])
@@ -34,12 +34,14 @@
                [style_list (xlsx-style-style_list xlsx_style)]
                [fill_list (xlsx-style-fill_list xlsx_style)]
                [font_list (xlsx-style-font_list xlsx_style)]
+               [numFmt_list (xlsx-style-numFmt_list xlsx_style)]
               )
 
           (check-equal? (hash-count cell_to_style_index_hash) 19)
           (check-equal? (length style_list) 6)
           (check-equal? (length fill_list) 2)
           (check-equal? (length font_list) 3)
+          (check-equal? (length numFmt_list) 1)
 
           (check-equal? (hash-count (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "A1")))) 1)
           (check-equal? 
@@ -51,18 +53,24 @@
            (list-ref fill_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "B2"))) 'fill) 2))
            (make-hash '((fgColor . "blue"))))
 
-          (check-equal? (hash-count (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C3")))) 2)
+          (check-equal? (hash-count (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C3")))) 3)
           (check-equal? 
            (list-ref fill_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C3"))) 'fill) 2))
            (make-hash '((fgColor . "blue"))))
           (check-equal? 
            (list-ref font_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C3"))) 'font)))
            (make-hash '((fontSize . 10) (fontColor . "33E5B5"))))
+          (check-equal? 
+           (list-ref numFmt_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C3"))) 'numFmt)))
+           (make-hash '((numberPrecision . 2))))
 
-          (check-equal? (hash-count (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "D4")))) 1)
+          (check-equal? (hash-count (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "D4")))) 2)
           (check-equal? 
            (list-ref font_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "D4"))) 'font)))
            (make-hash '((fontSize . 10) (fontColor . "33E5B5"))))
+          (check-equal? 
+           (list-ref numFmt_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "D4"))) 'numFmt)))
+           (make-hash '((numberPrecision . 2))))
 
           (check-equal? (hash-count (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "F6")))) 1)
           (check-equal? 

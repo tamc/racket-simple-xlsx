@@ -1,6 +1,8 @@
 #lang at-exp racket/base
 
 (require racket/port)
+(require racket/math)
+(require racket/format)
 (require racket/file)
 (require racket/class)
 (require racket/list)
@@ -9,9 +11,10 @@
 (require "../../../lib/lib.rkt")
 
 (provide (contract-out
-          [write-styles (-> list? list? list? string?)]
           [write-header (-> string?)]
           [write-fonts (-> list? string?)]
+          [get-numFormatCode (-> hash? string?)]
+          [write-numFmts (-> list? string?)]
           [write-fills (-> list? string?)]
           [write-borders (-> string?)]
           [write-cellStyleXfs (-> string?)]
@@ -19,7 +22,8 @@
           [write-cellStyles (-> string?)]
           [write-dxfs (-> string?)]
           [write-footer (-> string?)]
-          [write-styles-file (-> path-string? list? list? list? void?)]
+          [write-styles (-> list? list? list? list? string?)]
+          [write-styles-file (-> path-string? list? list? list? list? void?)]
           ))
 
 (define S string-append)
@@ -58,6 +62,37 @@
               (printf "    <scheme val=\"minor\"/>\n"))
             (printf "  </font>\n")
             (loop (cdr loop_list)))))))|</fonts>
+})
+
+(define (get-numFormatCode format_hash)
+  (let* ([raw_number_precision (hash-ref format_hash 'numberPrecision 2)]
+         [number_precision (if (natural? raw_number_precision) raw_number_precision 2)]
+         [number_precision_str
+          (format "0~a~a"
+                  (if (not (= number_precision 0)) "." "")
+                  (~a "" #:min-width number_precision #:pad-string "0"))]
+         [number_thousands (hash-ref format_hash 'numberThousands #f)]
+         [number_percent (hash-ref format_hash 'numberPercent #f)])
+    (cond
+     [number_thousands
+      (string-append "#,###" number_precision_str)]
+     [number_percent
+      (string-append number_precision_str "%")]
+     [else
+       number_precision_str]
+     )))
+
+(define (write-numFmts numFmt_list) @S{
+<numFmts count="@|(number->string (add1 (length numFmt_list)))|">
+  <numFmt numFmtId="164" formatCode="General"/>
+@|(with-output-to-string
+    (lambda ()
+      (let loop ([loop_list numFmt_list]
+                 [loop_numId 164])
+        (when (not (null? loop_list))
+          (let ([formatCode (get-numFormatCode (car loop_list))])
+            (printf "  <numFmt numFmtId=\"~a\" formatCode=\"~a\"/>\n" (add1 loop_numId) formatCode))
+          (loop (cdr loop_list) (add1 loop_numId))))))|</numFmts>
 })
 
 (define (write-fills fill_list) @S{
@@ -114,10 +149,12 @@
 </styleSheet>
 })
 
-(define (write-styles style_list fill_list font_list) @S{
+(define (write-styles style_list fill_list font_list numFmt_list) @S{
 @|(write-header)|
 
 @|(prefix-each-line (write-fonts font_list) "  ")|
+
+@|(prefix-each-line (write-numFmts numFmt_list) "  ")|
 
 @|(prefix-each-line (write-fills fill_list) "  ")|
 
@@ -134,7 +171,7 @@
 @|(write-footer)|
 })
 
-(define (write-styles-file dir style_list fill_list font_list)
+(define (write-styles-file dir style_list fill_list font_list numFmt_list)
   (make-directory* dir)
 
   (with-output-to-file (build-path dir "styles.xml")
@@ -144,4 +181,5 @@
                     style_list
                     fill_list
                     font_list
+                    numFmt_list
                     )))))

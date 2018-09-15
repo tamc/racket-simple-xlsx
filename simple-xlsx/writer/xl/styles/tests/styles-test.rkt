@@ -18,9 +18,9 @@
     
     (let ([style_list 
            (list 
-            #hash((fill . 1) (font . 3)) 
+            #hash((fill . 1) (font . 3) (numFmt . 2))
             #hash((fill . 2))
-            #hash((fill . 3) (font . 1))
+            #hash((fill . 3) (font . 1) (numFmt . 1))
             #hash((font . 2))
             )
            ]
@@ -34,12 +34,18 @@
             #hash((fontSize . 20)) 
             #hash((fontSize . 30) (fontColor . "red"))
             #hash((fontSize . 40))
-            )])
+            )]
+          [numFmt_list
+           (list
+            #hash((numberPrecision . 2))
+            #hash((numberPrecision . 2) (numberPercent . #t))
+            )]
+          )
 
       (call-with-input-file test_file
         (lambda (expected)
           (call-with-input-string
-           (write-styles style_list fill_list font_list)
+           (write-styles style_list fill_list font_list numFmt_list)
            (lambda (actual)
              (check-lines? expected actual)))))
       ))))

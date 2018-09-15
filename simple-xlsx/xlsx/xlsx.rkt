@@ -14,6 +14,8 @@
                    (fill_list list?)
                    (font_code_to_font_index_hash hash?)
                    (font_list list?)
+                   (numFmt_code_to_numFmt_index_hash hash?)
+                   (numFmt_list list?)
                    )]
           ))
 
@@ -24,6 +26,8 @@
                     [fill_list #:mutable]
                     [font_code_to_font_index_hash #:mutable]
                     [font_list #:mutable]
+                    [numFmt_code_to_numFmt_index_hash #:mutable]
+                    [numFmt_list #:mutable]
                     ))
 
 (define xlsx%
@@ -34,7 +38,7 @@
           [sheets '()]
           [sheet_name_map (make-hash)]
           [string_item_map (make-hash)]
-          [style (xlsx-style (make-hash) '() (make-hash) '() (make-hash) '())]
+          [style (xlsx-style (make-hash) '() (make-hash) '() (make-hash) '() (make-hash) '())]
           )
          
          (define/public (add-data-sheet #:sheet_name sheet_name #:sheet_data sheet_data)
@@ -176,6 +180,7 @@
                                (eq? (car style_pair) 'fontSize)
                                (eq? (car style_pair) 'fontColor)
                                (eq? (car style_pair) 'fontName)
+                               (eq? (car style_pair) 'numberPrecision)
                                )
                               (hash-set! style_hash (car style_pair) (cdr style_pair))
                               ]
@@ -211,6 +216,10 @@
                                    [font_hash_code #f]
                                    [font_code_to_font_index_hash (xlsx-style-font_code_to_font_index_hash style)]
                                    [font_list (xlsx-style-font_list style)]
+                                   [numFmt_hash (make-hash)]
+                                   [numFmt_hash_code #f]
+                                   [numFmt_code_to_numFmt_index_hash (xlsx-style-numFmt_code_to_numFmt_index_hash style)]
+                                   [numFmt_list (xlsx-style-numFmt_list style)]
                                    )
 
                                (hash-for-each
@@ -227,6 +236,10 @@
                                      (eq? key 'fontName)
                                      )
                                     (hash-set! font_hash key value)]
+                                   [(or
+                                     (eq? key 'numberPrecision)
+                                     )
+                                    (hash-set! numFmt_hash key value)]
                                    )))
                                
                                (when (> (hash-count fill_hash) 0)
@@ -248,6 +261,16 @@
                                            (set-xlsx-style-font_list! style `(,@font_list ,font_hash))
                                            (hash-set! style_hash 'font (add1 (length font_list))))
                                          (hash-set! style_hash 'font (hash-ref font_code_to_font_index_hash font_hash_code))))
+
+                               (when (> (hash-count numFmt_hash) 0)
+                                     (set! numFmt_hash_code (equal-hash-code numFmt_hash))
+
+                                     (if (not (hash-has-key? numFmt_code_to_numFmt_index_hash numFmt_hash_code))
+                                         (begin
+                                           (hash-set! numFmt_code_to_numFmt_index_hash numFmt_hash_code (add1 (length numFmt_list)))
+                                           (set-xlsx-style-numFmt_list! style `(,@numFmt_list ,numFmt_hash))
+                                           (hash-set! style_hash 'numFmt (add1 (length numFmt_list))))
+                                         (hash-set! style_hash 'numFmt (hash-ref numFmt_code_to_numFmt_index_hash numFmt_hash_code))))
                                
                                (when (> (hash-count style_hash) 0)
                                      (set! style_hash_code (equal-hash-code style_hash))
