@@ -18,9 +18,9 @@
     
     (let ([style_list 
            (list 
-            #hash((fill . 1) (font . 3) (numFmt . 2))
+            #hash((fill . 1) (font . 3) (numFmt . 165))
             #hash((fill . 2))
-            #hash((fill . 3) (font . 1) (numFmt . 1))
+            #hash((fill . 3) (font . 1) (numFmt . 166))
             #hash((font . 2))
             )
            ]

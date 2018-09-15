@@ -129,8 +129,9 @@
       (let loop ([loop_list style_list])
         (when (not (null? loop_list))
           (let ([fill (hash-ref (car loop_list) 'fill 0)]
-                [font (hash-ref (car loop_list) 'font 0)])
-            (printf "  <xf numFmtId=\"0\" fontId=\"~a\" fillId=\"~a\" borderId=\"0\" xfId=\"0\"" font fill)
+                [font (hash-ref (car loop_list) 'font 0)]
+                [numFmt (hash-ref (car loop_list) 'numFmt 0)])
+            (printf "  <xf numFmtId=\"~a\" fontId=\"~a\" fillId=\"~a\" borderId=\"0\" xfId=\"0\"" numFmt font fill)
             (when (not (= font 0)) (printf " applyFont=\"1\""))
             (when (not (= fill 0)) (printf " applyFill=\"1\""))
             (printf "><alignment vertical=\"center\"/></xf>\n"))
@@ -152,9 +153,9 @@
 (define (write-styles style_list fill_list font_list numFmt_list) @S{
 @|(write-header)|
 
-@|(prefix-each-line (write-fonts font_list) "  ")|
-
 @|(prefix-each-line (write-numFmts numFmt_list) "  ")|
+
+@|(prefix-each-line (write-fonts font_list) "  ")|
 
 @|(prefix-each-line (write-fills fill_list) "  ")|
 

@@ -181,6 +181,8 @@
                                (eq? (car style_pair) 'fontColor)
                                (eq? (car style_pair) 'fontName)
                                (eq? (car style_pair) 'numberPrecision)
+                               (eq? (car style_pair) 'numberPercent)
+                               (eq? (car style_pair) 'numberThousands)
                                )
                               (hash-set! style_hash (car style_pair) (cdr style_pair))
                               ]
@@ -199,7 +201,8 @@
                    (let* ([sheet (sheet-content (car sheet_list))]
                           [cell_to_origin_style_hash (data-sheet-cell_to_origin_style_hash sheet)]
                           [cell_to_style_index_hash (data-sheet-cell_to_style_index_hash sheet)]
-                          [style_code_to_style_index_hash (make-hash)])
+                          [style_code_to_style_index_hash (make-hash)]
+                          [numFmt_index 164])
 
                      (let loop ([loop_list (hash->list cell_to_origin_style_hash)])
                        (when (not (null? loop_list))
@@ -238,6 +241,8 @@
                                     (hash-set! font_hash key value)]
                                    [(or
                                      (eq? key 'numberPrecision)
+                                     (eq? key 'numberPercent)
+                                     (eq? key 'numberThousands)
                                      )
                                     (hash-set! numFmt_hash key value)]
                                    )))
@@ -252,6 +257,17 @@
                                            (hash-set! style_hash 'fill (+ 2 (length fill_list))))
                                          (hash-set! style_hash 'fill (hash-ref fill_code_to_fill_index_hash fill_hash_code))))
 
+                               (when (> (hash-count numFmt_hash) 0)
+                                     (set! numFmt_hash_code (equal-hash-code numFmt_hash))
+
+                                     (if (not (hash-has-key? numFmt_code_to_numFmt_index_hash numFmt_hash_code))
+                                         (begin
+                                           (hash-set! numFmt_code_to_numFmt_index_hash numFmt_hash_code (add1 numFmt_index))
+                                           (set-xlsx-style-numFmt_list! style `(,@numFmt_list ,numFmt_hash))
+                                           (hash-set! style_hash 'numFmt (add1 numFmt_index))
+                                           (set! numFmt_index (add1 numFmt_index)))
+                                         (hash-set! style_hash 'numFmt (hash-ref numFmt_code_to_numFmt_index_hash numFmt_hash_code))))
+
                                (when (> (hash-count font_hash) 0)
                                      (set! font_hash_code (equal-hash-code font_hash))
 
@@ -261,16 +277,6 @@
                                            (set-xlsx-style-font_list! style `(,@font_list ,font_hash))
                                            (hash-set! style_hash 'font (add1 (length font_list))))
                                          (hash-set! style_hash 'font (hash-ref font_code_to_font_index_hash font_hash_code))))
-
-                               (when (> (hash-count numFmt_hash) 0)
-                                     (set! numFmt_hash_code (equal-hash-code numFmt_hash))
-
-                                     (if (not (hash-has-key? numFmt_code_to_numFmt_index_hash numFmt_hash_code))
-                                         (begin
-                                           (hash-set! numFmt_code_to_numFmt_index_hash numFmt_hash_code (add1 (length numFmt_list)))
-                                           (set-xlsx-style-numFmt_list! style `(,@numFmt_list ,numFmt_hash))
-                                           (hash-set! style_hash 'numFmt (add1 (length numFmt_list))))
-                                         (hash-set! style_hash 'numFmt (hash-ref numFmt_code_to_numFmt_index_hash numFmt_hash_code))))
                                
                                (when (> (hash-count style_hash) 0)
                                      (set! style_hash_code (equal-hash-code style_hash))
@@ -294,5 +300,7 @@
          (define/public (get-fill-list) (xlsx-style-fill_list style))
 
          (define/public (get-font-list) (xlsx-style-font_list style))
+
+         (define/public (get-numFmt-list) (xlsx-style-numFmt_list style))
 
          ))

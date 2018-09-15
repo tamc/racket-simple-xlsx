@@ -2,6 +2,12 @@
 
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
 
+  <numFmts count="3">
+    <numFmt numFmtId="164" formatCode="General"/>
+    <numFmt numFmtId="165" formatCode="0.00"/>
+    <numFmt numFmtId="166" formatCode="0.00%"/>
+  </numFmts>
+
   <fonts count="4">
     <font>
       <sz val="11"/>
@@ -39,12 +45,6 @@
       <scheme val="minor"/>
     </font>
   </fonts>
-
-  <numFmts count="3">
-    <numFmt numFmtId="164" formatCode="General"/>
-    <numFmt numFmtId="165" formatCode="0.00"/>
-    <numFmt numFmtId="166" formatCode="0.00%"/>
-  </numFmts>
 
   <fills count="5">
     <fill><patternFill patternType="none"/></fill>

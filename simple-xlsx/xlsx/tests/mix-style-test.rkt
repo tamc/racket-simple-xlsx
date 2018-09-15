@@ -61,7 +61,7 @@
            (list-ref font_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C3"))) 'font)))
            (make-hash '((fontSize . 10) (fontColor . "33E5B5"))))
           (check-equal? 
-           (list-ref numFmt_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C3"))) 'numFmt)))
+           (list-ref numFmt_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C3"))) 'numFmt) 165))
            (make-hash '((numberPrecision . 2))))
 
           (check-equal? (hash-count (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "D4")))) 2)
@@ -69,7 +69,7 @@
            (list-ref font_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "D4"))) 'font)))
            (make-hash '((fontSize . 10) (fontColor . "33E5B5"))))
           (check-equal? 
-           (list-ref numFmt_list (sub1 (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "D4"))) 'numFmt)))
+           (list-ref numFmt_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "D4"))) 'numFmt) 165))
            (make-hash '((numberPrecision . 2))))
 
           (check-equal? (hash-count (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "F6")))) 1)

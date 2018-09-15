@@ -21,8 +21,8 @@
             (send xlsx add-data-sheet 
                   #:sheet_name "DataSheet" 
                   #:sheet_data '(("month/brand" "201601" "201602" "201603" "201604")
-                                 ("CAT" 100 300 200 6.9)
-                                 ("Puma" 200 400 300 13.89)
+                                 ("CAT" 100 300 200 0.6934)
+                                 ("Puma" 200 400 300 139999.89223)
                                  ("Asics" 300 500 400 23.34)
                                  ))
             (send xlsx set-data-sheet-col-width! #:sheet_name "DataSheet" #:col_range "A-B" #:width 50)
@@ -34,6 +34,11 @@
             (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B3-C4" #:style '( (fontSize . 20) (fontName . "Impact")))
 
             (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B1-C3" #:style '( (fontColor . "FF8800") ))
+
+            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "E2-E2" #:style '( (numberPercent . #t) ))
+            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "E3-E3" 
+                  #:style '( (numberPrecision . 2) (numberThousands . #t)))
+            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "E4-E4" #:style '( (numberPrecision . 0) ))
 
             (send xlsx add-chart-sheet #:sheet_name "LineChart1" #:topic "Horizontal Data" #:x_topic "Kg")
             (send xlsx set-chart-x-data! #:sheet_name "LineChart1" #:data_sheet_name "DataSheet" #:data_range "B1-D1")
@@ -83,7 +88,7 @@
 
              (load-sheet "DataSheet" xlsx)
              (check-equal? (get-sheet-dimension xlsx) '(4 . 5))
-             (check-equal? (get-cell-value "E2" xlsx) 6.9)
+             (check-equal? (get-cell-value "E2" xlsx) 0.6934)
 
              (load-sheet "LineChart1" xlsx)
              (check-equal? (get-sheet-dimension xlsx) '(4 . 5))

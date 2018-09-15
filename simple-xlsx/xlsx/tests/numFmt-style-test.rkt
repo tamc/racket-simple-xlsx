@@ -46,15 +46,16 @@
           (check-equal? (length numFmt_list) 2)
           
           (check-equal? 
-           (list-ref numFmt_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "A1"))) 'numFmt) 2))
+           (list-ref numFmt_list 
+                     (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "A1"))) 'numFmt) 165))
            (make-hash '((numberPrecision . 2))))
 
           (check-equal? 
-           (list-ref numFmt_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "B1"))) 'numFmt) 2))
+           (list-ref numFmt_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "B1"))) 'numFmt) 165))
            (make-hash '((numberPrecision . 3))))
 
           (check-equal? 
-           (list-ref numFmt_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C1"))) 'numFmt) 2))
+           (list-ref numFmt_list (- (hash-ref (list-ref style_list (sub1 (hash-ref cell_to_style_index_hash "C1"))) 'numFmt) 165))
            (make-hash '((numberPrecision . 2))))
           )
 
