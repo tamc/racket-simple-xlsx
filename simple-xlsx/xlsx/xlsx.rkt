@@ -16,6 +16,8 @@
                    (font_list list?)
                    (numFmt_code_to_numFmt_index_hash hash?)
                    (numFmt_list list?)
+                   (border_code_to_border_index_hash hash?)
+                   (border_list list?)
                    )]
           ))
 
@@ -28,6 +30,8 @@
                     [font_list #:mutable]
                     [numFmt_code_to_numFmt_index_hash #:mutable]
                     [numFmt_list #:mutable]
+                    [border_code_to_border_index_hash #:mutable]
+                    [border_list #:mutable]
                     ))
 
 (define xlsx%
@@ -38,7 +42,7 @@
           [sheets '()]
           [sheet_name_map (make-hash)]
           [string_item_map (make-hash)]
-          [style (xlsx-style (make-hash) '() (make-hash) '() (make-hash) '() (make-hash) '())]
+          [style (xlsx-style (make-hash) '() (make-hash) '() (make-hash) '() (make-hash) '() (make-hash) '())]
           )
          
          (define/public (add-data-sheet #:sheet_name sheet_name #:sheet_data sheet_data)
@@ -183,6 +187,9 @@
                                (eq? (car style_pair) 'numberPrecision)
                                (eq? (car style_pair) 'numberPercent)
                                (eq? (car style_pair) 'numberThousands)
+                               (eq? (car style_pair) 'borderDirection)
+                               (eq? (car style_pair) 'borderStyle)
+                               (eq? (car style_pair) 'borderColor)
                                )
                               (hash-set! style_hash (car style_pair) (cdr style_pair))
                               ]
@@ -223,6 +230,10 @@
                                    [numFmt_hash_code #f]
                                    [numFmt_code_to_numFmt_index_hash (xlsx-style-numFmt_code_to_numFmt_index_hash style)]
                                    [numFmt_list (xlsx-style-numFmt_list style)]
+                                   [border_hash (make-hash)]
+                                   [border_hash_code #f]
+                                   [border_code_to_border_index_hash (xlsx-style-border_code_to_border_index_hash style)]
+                                   [border_list (xlsx-style-border_list style)]
                                    )
 
                                (hash-for-each
@@ -245,6 +256,12 @@
                                      (eq? key 'numberThousands)
                                      )
                                     (hash-set! numFmt_hash key value)]
+                                   [(or
+                                     (eq? key 'borderDirection)
+                                     (eq? key 'borderStyle)
+                                     (eq? key 'borderColor)
+                                     )
+                                    (hash-set! border_hash key value)]
                                    )))
                                
                                (when (> (hash-count fill_hash) 0)
@@ -277,6 +294,16 @@
                                            (set-xlsx-style-font_list! style `(,@font_list ,font_hash))
                                            (hash-set! style_hash 'font (add1 (length font_list))))
                                          (hash-set! style_hash 'font (hash-ref font_code_to_font_index_hash font_hash_code))))
+
+                               (when (> (hash-count border_hash) 0)
+                                     (set! border_hash_code (equal-hash-code border_hash))
+
+                                     (if (not (hash-has-key? border_code_to_border_index_hash border_hash_code))
+                                         (begin
+                                           (hash-set! border_code_to_border_index_hash border_hash_code (add1 (length border_list)))
+                                           (set-xlsx-style-border_list! style `(,@border_list ,border_hash))
+                                           (hash-set! style_hash 'border (add1 (length border_list))))
+                                         (hash-set! style_hash 'border (hash-ref border_code_to_border_index_hash border_hash_code))))
                                
                                (when (> (hash-count style_hash) 0)
                                      (set! style_hash_code (equal-hash-code style_hash))
@@ -302,5 +329,7 @@
          (define/public (get-font-list) (xlsx-style-font_list style))
 
          (define/public (get-numFmt-list) (xlsx-style-numFmt_list style))
+
+         (define/public (get-border-list) (xlsx-style-border_list style))
 
          ))

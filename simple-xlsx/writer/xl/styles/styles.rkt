@@ -16,7 +16,7 @@
           [get-numFormatCode (-> hash? string?)]
           [write-numFmts (-> list? string?)]
           [write-fills (-> list? string?)]
-          [write-borders (-> string?)]
+          [write-borders (-> list? string?)]
           [write-cellStyleXfs (-> string?)]
           [write-cellXfs (-> list? string?)]
           [write-cellStyles (-> string?)]
@@ -109,7 +109,7 @@
         result_str))|</fills>
 })
 
-(define (write-borders) @S{
+(define (write-borders border_list) @S{
 <borders count="1">
   <border><left/><right/><top/><bottom/><diagonal/></border>
 </borders>
