@@ -18,12 +18,12 @@
     
     (let ([border_list 
            (list 
-            #hash((borderDirection . 'all) (borderStyle . 'double) (borderColor . "000000"))
-            #hash((borderDirection . 'all) (borderStyle . 'dashed) (borderColor . "0000FF"))
-            #hash((borderDirection . 'left) (borderStyle . 'dashed) (borderColor . "0000FF"))
-            #hash((borderDirection . 'right) (borderStyle . 'dashed) (borderColor . "0000FF"))
-            #hash((borderDirection . 'top) (borderStyle . 'dashed) (borderColor . "0000FF"))
-            #hash((borderDirection . 'bottom) (borderStyle . 'dashed) (borderColor . "0000FF"))
+            '#hash((borderDirection . all) (borderStyle . double) (borderColor . "000000"))
+            '#hash((borderDirection . all) (borderStyle . dashed) (borderColor . "0000FF"))
+            '#hash((borderDirection . left) (borderStyle . thick) (borderColor . "0000FF"))
+            '#hash((borderDirection . right) (borderStyle . thick) (borderColor . "0000FF"))
+            '#hash((borderDirection . top) (borderStyle . thick) (borderColor . "0000FF"))
+            '#hash((borderDirection . bottom) (borderStyle . thick) (borderColor . "0000FF"))
             )])
       
       (call-with-input-file test_file

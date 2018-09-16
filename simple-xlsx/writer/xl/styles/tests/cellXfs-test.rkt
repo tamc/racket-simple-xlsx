@@ -21,6 +21,7 @@
             #hash((fill . 1)) 
             #hash((fill . 2) (font . 1)) 
             #hash((font . 2))
+            #hash((border . 1))
             )])
       
       (call-with-input-file test_file

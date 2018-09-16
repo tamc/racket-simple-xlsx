@@ -54,8 +54,24 @@
     <fill><patternFill patternType="solid"><fgColor rgb="0000FF"/><bgColor indexed="64"/></patternFill></fill>
   </fills>
 
-  <borders count="1">
+  <borders count="3">
     <border><left/><right/><top/><bottom/><diagonal/></border>
+
+    <border>
+      <left style="thick"><color rgb="000000"/></left>
+      <right style="thick"><color rgb="000000"/></right>
+      <top style="thick"><color rgb="000000"/></top>
+      <bottom style="thick"><color rgb="000000"/></bottom>
+      <diagonal/>
+    </border>
+
+    <border>
+      <left style="thin"><color rgb="red"/></left>
+      <right style="thin"><color rgb="red"/></right>
+      <top style="thin"><color rgb="red"/></top>
+      <bottom style="thin"><color rgb="red"/></bottom>
+      <diagonal/>
+    </border>
   </borders>
 
   <cellStyleXfs count="1">

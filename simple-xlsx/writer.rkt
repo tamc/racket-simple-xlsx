@@ -64,6 +64,7 @@
            (send xlsx get-fill-list) 
            (send xlsx get-font-list)
            (send xlsx get-numFmt-list)
+           (send xlsx get-border-list)
            )
 
           ;; workbook

@@ -40,6 +40,8 @@
                   #:style '( (numberPrecision . 2) (numberThousands . #t)))
             (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "E4-E4" #:style '( (numberPrecision . 0) ))
 
+            (send xlsx add-data-sheet-cell-style! #:sheet_name "DataSheet" #:cell_range "B2-C4" #:style '( (borderStyle . dashed) (borderColor . "blue")))
+
             (send xlsx add-chart-sheet #:sheet_name "LineChart1" #:topic "Horizontal Data" #:x_topic "Kg")
             (send xlsx set-chart-x-data! #:sheet_name "LineChart1" #:data_sheet_name "DataSheet" #:data_range "B1-D1")
             (send xlsx add-chart-serial! #:sheet_name "LineChart1" #:data_sheet_name "DataSheet" #:data_range "B2-D2" #:y_topic "CAT")

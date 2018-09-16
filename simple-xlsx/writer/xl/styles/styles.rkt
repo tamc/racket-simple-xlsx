@@ -22,8 +22,8 @@
           [write-cellStyles (-> string?)]
           [write-dxfs (-> string?)]
           [write-footer (-> string?)]
-          [write-styles (-> list? list? list? list? string?)]
-          [write-styles-file (-> path-string? list? list? list? list? void?)]
+          [write-styles (-> list? list? list? list? list? string?)]
+          [write-styles-file (-> path-string? list? list? list? list? list? void?)]
           ))
 
 (define S string-append)
@@ -110,9 +110,28 @@
 })
 
 (define (write-borders border_list) @S{
-<borders count="1">
+<borders count="@|(number->string (add1 (length border_list)))|">
   <border><left/><right/><top/><bottom/><diagonal/></border>
-</borders>
+@|(with-output-to-string
+    (lambda ()
+      (let loop ([loop_list border_list])
+        (when (not (null? loop_list))
+          (printf "\n")
+          (let ([borderDirection (hash-ref (car loop_list) 'borderDirection 'all)]
+                [borderStyle (hash-ref (car loop_list) 'borderStyle 'thin)]
+                [borderColor (hash-ref (car loop_list) 'borderColor "000000")])
+            (printf "  <border>\n")
+            (let direction-loop ([directions '(left right top bottom)])
+              (when (not (null? directions))
+                (if (or 
+                      (eq? borderDirection 'all)
+                      (eq? (car directions) borderDirection))
+                  (printf "    <~a style=\"~a\"><color rgb=\"~a\"/></~a>\n" (car directions) borderStyle borderColor (car directions))
+                  (printf "    <~a/>\n" (car directions)))
+                (direction-loop (cdr directions))))
+            (printf "    <diagonal/>\n")
+            (printf "  </border>\n")
+          (loop (cdr loop_list)))))))|</borders>
 })
 
 (define (write-cellStyleXfs) @S{
@@ -130,10 +149,13 @@
         (when (not (null? loop_list))
           (let ([fill (hash-ref (car loop_list) 'fill 0)]
                 [font (hash-ref (car loop_list) 'font 0)]
-                [numFmt (hash-ref (car loop_list) 'numFmt 0)])
-            (printf "  <xf numFmtId=\"~a\" fontId=\"~a\" fillId=\"~a\" borderId=\"0\" xfId=\"0\"" numFmt font fill)
+                [numFmt (hash-ref (car loop_list) 'numFmt 0)]
+                [border (hash-ref (car loop_list) 'border 0)]
+               )
+            (printf "  <xf numFmtId=\"~a\" fontId=\"~a\" fillId=\"~a\" borderId=\"~a\" xfId=\"0\"" numFmt font fill border)
             (when (not (= font 0)) (printf " applyFont=\"1\""))
             (when (not (= fill 0)) (printf " applyFill=\"1\""))
+            (when (not (= border 0)) (printf " applyBorder=\"1\""))
             (printf "><alignment vertical=\"center\"/></xf>\n"))
           (loop (cdr loop_list))))))|</cellXfs>
 })
@@ -150,7 +172,7 @@
 </styleSheet>
 })
 
-(define (write-styles style_list fill_list font_list numFmt_list) @S{
+(define (write-styles style_list fill_list font_list numFmt_list border_list) @S{
 @|(write-header)|
 
 @|(prefix-each-line (write-numFmts numFmt_list) "  ")|
@@ -159,7 +181,7 @@
 
 @|(prefix-each-line (write-fills fill_list) "  ")|
 
-@|(prefix-each-line (write-borders) "  ")|
+@|(prefix-each-line (write-borders border_list) "  ")|
 
 @|(prefix-each-line (write-cellStyleXfs) "  ")|
 
@@ -172,7 +194,7 @@
 @|(write-footer)|
 })
 
-(define (write-styles-file dir style_list fill_list font_list numFmt_list)
+(define (write-styles-file dir style_list fill_list font_list numFmt_list border_list)
   (make-directory* dir)
 
   (with-output-to-file (build-path dir "styles.xml")
@@ -183,4 +205,5 @@
                     fill_list
                     font_list
                     numFmt_list
+                    border_list
                     )))))

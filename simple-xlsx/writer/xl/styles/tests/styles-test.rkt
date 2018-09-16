@@ -40,12 +40,17 @@
             #hash((numberPrecision . 2))
             #hash((numberPrecision . 2) (numberPercent . #t))
             )]
+          [border_list
+           (list
+            #hash((borderStyle . thick))
+            #hash((borderColor . "red"))
+            )]
           )
 
       (call-with-input-file test_file
         (lambda (expected)
           (call-with-input-string
-           (write-styles style_list fill_list font_list numFmt_list)
+           (write-styles style_list fill_list font_list numFmt_list border_list)
            (lambda (actual)
              (check-lines? expected actual)))))
       ))))
