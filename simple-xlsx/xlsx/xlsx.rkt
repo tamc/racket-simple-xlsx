@@ -50,24 +50,40 @@
                  (if (not (hash-has-key? sheet_name_map sheet_name))
                      (let* ([sheet_length (length sheets)]
                             [seq (add1 sheet_length)]
-                            [type_seq (add1 (length (filter (lambda (rec) (eq? (sheet-type rec) 'data)) sheets)))])
-                       
-                       (let loop ([loop_list sheet_data])
-                         (when (not (null? loop_list))
-                               (let inner-loop ([inner_loop_list (car loop_list)])
-                                 (when (not (null? inner_loop_list))
-                                       (when (string? (car inner_loop_list))
-                                             (hash-set! string_item_map (car inner_loop_list) ""))
-                                       (inner-loop (cdr inner_loop_list))))
-                               (loop (cdr loop_list))))
-                       
+                            [type_seq (add1 (length (filter (lambda (rec) (eq? (sheet-type rec) 'data)) sheets)))]
+                            [transformed_sheet_data 
+                             (let loop ([loop_list sheet_data]
+                                        [result '()])
+                               (if (not (null? loop_list))
+                                   (loop
+                                    (cdr loop_list)
+                                    (cons
+                                     (let inner-loop ([inner_loop_list (car loop_list)]
+                                                      [inner_result '()])
+                                       (if (not (null? inner_loop_list))
+                                           (inner-loop
+                                            (cdr inner_loop_list)
+                                            (cons
+                                             (cond
+                                              [(string? (car inner_loop_list))
+                                               (hash-set! string_item_map (car inner_loop_list) "")
+                                               (car inner_loop_list)]
+                                              [(date? (car inner_loop_list))
+                                               (date->oa_date_number (car inner_loop_list))]
+                                              [else
+                                               (car inner_loop_list)])
+                                             inner_result))
+                                           (reverse inner_result)))
+                                     result))
+                                   (reverse result)))])
+
                        (set! sheets `(,@sheets
                                       ,(sheet
                                         sheet_name
                                         seq
                                         'data
                                         type_seq
-                                        (data-sheet sheet_data (make-hash) (make-hash) (make-hash)))))
+                                        (data-sheet transformed_sheet_data (make-hash) (make-hash) (make-hash)))))
                        (hash-set! sheet_name_map sheet_name (sub1 seq)))
                      (error (format "duplicate sheet name[~a]" sheet_name)))))
          

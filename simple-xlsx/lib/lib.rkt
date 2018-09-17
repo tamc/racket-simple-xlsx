@@ -29,6 +29,7 @@
           [combine-hash-in-hash (-> (listof hash?) hash?)]
           [check-lines? (-> input-port? input-port? void?)]
           [prefix-each-line (-> string? string? string?)]
+          [date->oa_date_number (-> date? natural?)]
           ))
 
 (define-check (check-lines? expected_port test_port)
@@ -290,3 +291,8 @@
                 (if (char=? (car chars) #\newline)
                     (loop (cdr chars) #t)
                     (loop (cdr chars) #f)))))))
+
+(define (date->oa_date_number t_date)
+  (let ([epoch (* -1 (find-seconds 0 0 0 30 12 1899))]
+        [date_seconds (date->seconds t_date)])
+    (inexact->exact (floor (* (/ (+ date_seconds epoch) 86400000) 1000)))))

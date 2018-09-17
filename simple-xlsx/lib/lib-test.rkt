@@ -190,6 +190,14 @@
     (let ([str "\nsskd\n\n"])
       (check-equal? (prefix-each-line str "  ") "\n  sskd\n\n"))
     )
+
+   (test-case
+    "test-date->oadate"
+    
+    (check-equal? (date->oa_date_number (seconds->date (find-seconds 0 0 0 17 9 2018))) 43360)
+
+    (check-equal? (date->oa_date_number (seconds->date (find-seconds 0 0 0 16 9 2018))) 43359)
+    )
     
   ))
 

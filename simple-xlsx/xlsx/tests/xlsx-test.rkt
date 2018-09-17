@@ -1,6 +1,7 @@
 #lang racket
 
 (require rackunit/text-ui)
+(require racket/date)
 
 (require rackunit "../xlsx.rkt")
 (require rackunit "../sheet.rkt")
@@ -20,6 +21,24 @@
       (let ([string_item_map (get-field string_item_map xlsx)])
         (check-equal? (hash-count string_item_map) 4)
         (check-true (hash-has-key? string_item_map "xx")))))
+
+   (test-case
+    "test-add-data-sheet-date-type"
+
+    (let ([xlsx (new xlsx%)])
+      (send xlsx add-data-sheet 
+            #:sheet_name "测试1" 
+            #:sheet_data (list
+                          (list 1 (seconds->date (find-seconds 0 0 0 17 9 2018)))
+                          (list 2 (seconds->date (find-seconds 0 0 0 18 9 2018)))
+                          (list 3 (seconds->date (find-seconds 0 0 0 19 9 2018)))
+                          ))
+      
+      (let* ([sheets (get-field sheets xlsx)]
+             [data_sheet (data-sheet-rows (sheet-content (first sheets)))])
+        (check-equal? (second (list-ref data_sheet 0)) 43360)
+        (check-equal? (second (list-ref data_sheet 1)) 43361)
+        (check-equal? (second (list-ref data_sheet 2)) 43362))))
 
    (test-case
     "test-xlsx"
