@@ -52,6 +52,9 @@
             #hash((numberPrecision . 2) (numberPercent . #t))
             #hash((numberPrecision . 0))
             #hash((numberPrecision . 3))
+            #hash((dateFormat . "yyyy年mm月dd日"))
+            #hash((dateFormat . "yyyy-mm-dd"))
+            #hash((dateFormat . "yyyy/mm/dd"))
             )]
           )
 

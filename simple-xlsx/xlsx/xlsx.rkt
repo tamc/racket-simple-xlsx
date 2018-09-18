@@ -206,6 +206,7 @@
                                (eq? (car style_pair) 'borderDirection)
                                (eq? (car style_pair) 'borderStyle)
                                (eq? (car style_pair) 'borderColor)
+                               (eq? (car style_pair) 'dateFormat)
                                )
                               (hash-set! style_hash (car style_pair) (cdr style_pair))
                               ]
@@ -270,6 +271,7 @@
                                      (eq? key 'numberPrecision)
                                      (eq? key 'numberPercent)
                                      (eq? key 'numberThousands)
+                                     (eq? key 'dateFormat)
                                      )
                                     (hash-set! numFmt_hash key value)]
                                    [(or
