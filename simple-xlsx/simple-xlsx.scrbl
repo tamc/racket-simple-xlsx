@@ -56,6 +56,15 @@ there is also a complete read and write example on github:@link["https://github.
   cell axis: A1 B2 C3...
 }
 
+@defproc[(oa_date_number->date
+            [oa_date_number (number?)])
+            date?]{
+  if pre-know this cell value is date, so use this function to convert to date?.
+  or it's a number, like 43361.
+  the cons is this function just convert to a specific day with time is 00:00:00,
+  time part is not convertable.
+}
+
 @defproc[(get-sheet-dimension
             [xlsx_handler (xlsx_handler)])
             pair?]{
@@ -124,7 +133,13 @@ for example:
   (send xlsx set-data-sheet-col-width! #:sheet_name "DataSheet" #:col_range "A-B" #:width 50)
 }
 
-@subsubsection{set cell background color}
+@subsection{add style to data sheet}
+
+you can set various style to data sheet.
+
+specify a area part, add style to it.
+
+@subsubsection{backgroundColor}
 
 use set-data-sheet-cell-color! method to set cell's background color
 
