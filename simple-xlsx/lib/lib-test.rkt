@@ -198,6 +198,16 @@
 
     (check-equal? (date->oa_date_number (seconds->date (find-seconds 0 0 0 16 9 2018))) 43359)
     )
+
+   (test-case
+    "test-oadate->date"
+    
+    (check-equal? (oa_date_number->date 43360) (seconds->date (find-seconds 0 0 0 17 9 2018)))
+
+    (check-equal? (oa_date_number->date 43359) (seconds->date (find-seconds 0 0 0 16 9 2018)))
+
+    (check-equal? (oa_date_number->date 43359.1212121) (seconds->date (find-seconds 0 0 0 16 9 2018)))
+    )
     
   ))
 
