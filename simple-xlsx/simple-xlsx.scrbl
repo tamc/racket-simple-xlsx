@@ -59,10 +59,12 @@ there is also a complete read and write example on github:@link["https://github.
 @defproc[(oa_date_number->date
             [oa_date_number (number?)])
             date?]{
-  if pre-know this cell value is date, so use this function to convert to date?.
-  or it's a number, like 43361.
-  the cons is this function just convert to a specific day with time is 00:00:00,
-  time part is not convertable.
+  if knows cell's type is date, can use this function to convert to racket date? type.
+  if not convert, xlsx's date type just is a number, like 43361.
+
+  this function can convert number to a date? with precision to day only, the hour, minute and seconds set to 0.
+
+  (oa_date_number->date 43359.1212121) to a date is 2018-9-16 00:00:00.
 }
 
 @defproc[(get-sheet-dimension
@@ -120,33 +122,162 @@ sheet data just a list contains list: (list (list cell ...) (list cell ...)...).
 
 @verbatim{
   (let ([xlsx (new xlsx%)])
-    (send xlsx add-data-sheet #:sheet_name "Sheet1" #:sheet_data '(("chenxiao" "cx") (1 2)))
+    (send xlsx add-data-sheet 
+      #:sheet_name "Sheet1" 
+      #:sheet_data '(("chenxiao" "cx") (1 2)))
 }
 
 @subsubsection{set col width}
 
-use set-data-sheet-col-width! method to set col's width
+column width is be set automatically by content's width.
+
+if you want to set it manually, use set-data-sheet-col-width! method
 
 for example:
 @verbatim{
   ;; set column A, B width: 50
-  (send xlsx set-data-sheet-col-width! #:sheet_name "DataSheet" #:col_range "A-B" #:width 50)
+  (send xlsx set-data-sheet-col-width! 
+    #:sheet_name "DataSheet" 
+    #:col_range "A-B" #:width 50)
 }
 
-@subsection{add style to data sheet}
+@subsection{Add Style to Data Sheet}
 
-you can set various style to data sheet.
+you can add various style to a data sheet.
 
-specify a area part, add style to it.
+includes background color, font style, number format, border style, date format.
+
+use add-data-sheet-cell-style to add style to cells.
+
+the last parameter style is pair list.
+
+for example: @verbatim{'( (background . "FF0000") (fontSize . 20) )}
+
+you can use add-data-sheet-cell-style multiple times, to a cell, it's a pile effect.
+
+for example: 
+@verbatim{
+  (send xlsx add-data-sheet-cell-style! 
+    #:sheet_name "DataSheet" 
+    #:cell_range "B2-C3" 
+    #:style '( (background . "FF0000") ))
+
+  (send xlsx add-data-sheet-cell-style! 
+    #:sheet_name "DataSheet" 
+    #:cell_range "C3-D4" 
+    #:style '( (fontSize . 30) ))
+}
+
+the C2's style is @verbatim{'( (background . "FF0000") )}
+
+the D3's style is @verbatim{'( (fontSize . 30) )}
+
+the C3's style is @verbatim{( (background . "FF0000") (fontSize . 30) )}
+
+if set a cell the same style property multiple times, the last one works.
+
+for example: 
+
+@verbatim{
+  (send xlsx add-data-sheet-cell-style! 
+    #:sheet_name "DataSheet" 
+    #:cell_range "B2-C3" 
+    #:style '( (background . "FF0000") ))
+
+  (send xlsx add-data-sheet-cell-style! 
+    #:sheet_name "DataSheet" 
+    #:cell_range "C3-D4" 
+    #:style '( (background . "0000FF") ))
+}
+the C3's style is '( (background . "0000FF") ).
 
 @subsubsection{backgroundColor}
 
-use set-data-sheet-cell-color! method to set cell's background color
+rgb color or color name.
 
 for example:
 @verbatim{
-  ;; set B2 to C3, 2X2, total 4 cells's color to FF0000(red)
-  (send xlsx set-data-sheet-cell-color! #:sheet_name "DataSheet" #:cell_range "B2-C3" #:color "FF0000")
+  (send xlsx add-data-sheet-cell-style! 
+    #:sheet_name "DataSheetWithStyle" 
+    #:cell_range "A2-B3" 
+    #:style '( (backgroundColor . "00C851") ))
+}
+
+@subsubsection{fontStyle}
+
+fontSize: integer? default is 11.
+
+fontColor: rgb color or colorname.
+
+fontName: system font name.
+
+for example:
+@verbatim{
+  (send xlsx add-data-sheet-cell-style! 
+    #:sheet_name "DataSheetWithStyle" 
+    #:cell_range "B3-C4" 
+    #:style '( (fontSize . 20) (fontName . "Impact") (fontColor . "FF8800") ))
+}
+
+@subsubsection{numberFormat}
+
+numberPrecision: non-exact-integer?
+
+numberPercent: boolean?
+
+numberThousands: boolean?
+
+for example:
+@verbatim{
+  (send xlsx add-data-sheet-cell-style! 
+    #:sheet_name "DataSheetWithStyle" 
+    #:cell_range "E2-E2" 
+    #:style '( 
+              (numberPercent . #t) 
+              (numberPrecision . 2) 
+              (numberThousands . #t)))
+}
+
+@subsubsection{borderStyle}
+
+borderDirection: @verbatim{'left 'right 'top 'bottom 'all}
+
+boderStyle: 
+@verbatim{
+            'thin 'medium 'thick 'dashed 'thinDashed 
+
+            'mediumDashed 'thickDashed 'double 'hair 'dotted 
+
+            'dashDot 'dashDotDot 'mediumDashDot 'mediumDashDotDot 
+
+            'slantDashDot
+}
+
+borderColor: rgb color or color name.
+
+for example:
+@verbatim{
+  (send xlsx add-data-sheet-cell-style! 
+    #:sheet_name "DataSheetWithStyle" 
+    #:cell_range "B2-C4" 
+    #:style '( (borderStyle . dashed) (borderColor . "blue")))
+}
+
+@subsubsection{dateFormat}
+
+year: yyyy, month: mm, day: dd
+
+for example:
+@verbatim{
+  (send xlsx add-data-sheet-cell-style! 
+    #:sheet_name "DataSheetWithStyle" 
+    #:cell_range "F2-F2" 
+    #:style '( (dateFormat . "yyyy-mm-dd") ))
+
+  (send xlsx add-data-sheet-cell-style! 
+    #:sheet_name "DataSheetWithStyle" 
+    #:cell_range "F2-F2" 
+    #:style '( (dateFormat . "yyyy/mm/dd") ))
 }
 
 @subsection{Chart Sheet}
@@ -164,9 +295,16 @@ default chart_type is linechart or set chart type
 chart type is one of these: line, line3d, bar, bar3d, pie, pie3d
 
 @verbatim{
-  (send xlsx add-chart-sheet #:sheet_name "LineChart1" #:topic "Horizontal Data" #:x_topic "Kg")
+  (send xlsx add-chart-sheet 
+    #:sheet_name "LineChart1" 
+    #:topic "Horizontal Data" 
+    #:x_topic "Kg")
 
-  (send xlsx add-chart-sheet #:sheet_name "LineChart1" #:chart_type 'bar #:topic "Horizontal Data" #:x_topic "Kg")
+  (send xlsx add-chart-sheet 
+    #:sheet_name "LineChart1" 
+    #:chart_type 'bar 
+    #:topic "Horizontal Data" 
+    #:x_topic "Kg")
 }
 
 @subsubsection{set-chart-x-data! and add-chart-serail!}
@@ -176,8 +314,15 @@ use this two methods to set chart's x axis data and y axis data
 only one x axis data and multiple y axis data
 
 @verbatim{
-  (send xlsx set-chart-x-data! #:sheet_name "LineChart1" #:data_sheet_name "DataSheet" #:data_range "B1-D1")
-  (send xlsx add-chart-serial! #:sheet_name "LineChart1" #:data_sheet_name "DataSheet" #:data_range "B2-D2" #:y_topic "CAT")
+  (send xlsx set-chart-x-data! 
+    #:sheet_name "LineChart1" 
+    #:data_sheet_name "DataSheet" 
+    #:data_range "B1-D1")
+
+  (send xlsx add-chart-serial! 
+    #:sheet_name "LineChart1" 
+    #:data_sheet_name "DataSheet" 
+    #:data_range "B2-D2" #:y_topic "CAT")
 }
 
 @subsection{write file}
