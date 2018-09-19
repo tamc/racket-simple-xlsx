@@ -47,7 +47,10 @@
             (loop (cdr loop_lines) (add1 line_no))))))
 
 (define (format-date the_date)
-  (format "~a-~a-~a" (date-year the_date) (date-month the_date) (date-day the_date)))
+  (format "~a~a~a"
+          (~a (date-year the_date) #:min-width 4 #:pad-string "0" #:align 'right)
+          (~a (date-month the_date) #:min-width 2 #:pad-string "0" #:align 'right)
+          (~a (date-day the_date) #:min-width 2 #:pad-string "0" #:align 'right)))
 
 (define (format-complete-time the_date)
   (format "~a~a~a ~a:~a:~a"

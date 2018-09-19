@@ -4,6 +4,8 @@
 (require rackunit "../../main.rkt")
 (require racket/date)
 
+(require (only-in "../../lib/lib.rkt" format-date))
+
 (require racket/runtime-path)
 (define-runtime-path test_file "test.xlsx")
 
@@ -87,20 +89,30 @@
           (with-input-from-xlsx-file
            test_file
            (lambda (xlsx)
-             (check-equal? (get-sheet-names xlsx) '("DataSheet" "DataSheetWithStyle" "LineChart1" "LineChart2" "LineChart3D" "BarChart" "BarChart3D" "PieChart" "PieChart3D"))
+             (check-equal? 
+              (get-sheet-names xlsx) 
+              '("DataSheet" "DataSheetWithStyle" "LineChart1" "LineChart2" "LineChart3D" "BarChart" "BarChart3D" "PieChart" "PieChart3D"))
 
              (load-sheet "DataSheet" xlsx)
              (check-equal? (get-sheet-dimension xlsx) '(4 . 6))
              (check-equal? (get-cell-value "E2" xlsx) 0.6934)
 
+             (let* ([t_date (oa_date_number->date (get-cell-value "F2" xlsx))]
+                    [date_str (format-date t_date)])
+               (check-equal? date_str "20180917"))
+             (let* ([t_date (oa_date_number->date (get-cell-value "F3" xlsx))]
+                    [date_str (format-date t_date)])
+               (check-equal? date_str "20180918"))
+             (let* ([t_date (oa_date_number->date (get-cell-value "F4" xlsx))]
+                    [date_str (format-date t_date)])
+               (check-equal? date_str "20180919"))
+
              (load-sheet "LineChart1" xlsx)
              (check-equal? (get-sheet-dimension xlsx) '(4 . 6))
-
              ))
           )
         (lambda () 
-          (void))
-;          (delete-file "test.xlsx"))
+          (delete-file "test.xlsx"))
         ))
    ))
 
