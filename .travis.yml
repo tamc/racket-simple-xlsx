@@ -1,0 +1,12 @@
+language: minimal
+
+dist: xenial
+addons:
+  apt:
+    sources:
+      - ppa:plt/racket
+    packages:
+      - racket
+
+script:
+  ./simple-xlsx/test.sh
