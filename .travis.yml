@@ -9,4 +9,4 @@ addons:
       - racket
 
 script:
-  ./simple-xlsx/test.sh
+  - raco test .
