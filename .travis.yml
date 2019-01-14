@@ -4,7 +4,7 @@ dist: xenial
 addons:
   apt:
     sources:
-      - ppa:plt/racket
+      - sourceline: 'ppa:plt/racket'
     packages:
       - racket
 
